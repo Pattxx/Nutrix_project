@@ -1,0 +1,8 @@
+
+{
+  "name": "Nutrix - AI Calorie & Recipe Guide",
+  "description": "A comprehensive calorie tracking and AI-powered recipe generation app that uses your current ingredients to suggest meals and track nutritional goals.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
