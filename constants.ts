@@ -19,14 +19,3 @@ export const ACTIVITY_LEVELS = {
     active: { label: 'Very active (6-7 days/week)', factor: 1.725 },
     veryActive: { label: 'Extra active (physical job/intense training)', factor: 1.9 }
 };
-
-export const calculateDailyTarget = (user: UserProfile): number => {
-    const { weight, height, age, gender, activityLevel } = user;
-    
-    const genderOffset = gender === 'male' ? 5 : -161;
-    const bmr = (10 * weight) + (6.25 * height) - (5 * age) + genderOffset;
-
-    const factor = ACTIVITY_LEVELS[activityLevel as keyof typeof ACTIVITY_LEVELS]?.factor || 1.2;
-
-    return Math.round(bmr * factor);
-};

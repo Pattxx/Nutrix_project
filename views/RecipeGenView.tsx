@@ -12,7 +12,7 @@ const RecipeGenView: React.FC = () => {
             <div className="flex items-center justify-between">
                 <h2 className="text-3xl font-bold">AI Chef</h2>
                 <button
-                    onClick={() => setView('pantry')}
+                    onClick={() => setView('pantryView')}
                     className="text-emerald-600 font-semibold hover:underline"
                 >
                     Edit Pantry
@@ -129,7 +129,7 @@ const RecipeGenView: React.FC = () => {
                                     if (food) addMeal(food, ing.amountGrams);
                                 });
                                 alert("Recipe items added to your daily log!");
-                                setView('dashboard');
+                                setView('dashboardView');
                             }}
                             className="w-full py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition"
                         >

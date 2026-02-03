@@ -7,12 +7,13 @@ import ProfileView from "./views/ProfileView";
 import LoginView from "./views/LoginView";
 import RegisterView from "./views/RegisterView";
 
-
 import { NutrixProvider, useNutrix } from "./context/NutrixContext";
 
 import {
     LayoutDashboard, Utensils, ChefHat, History, User, LogOut
 } from "lucide-react";
+//connect to mongo
+
 
 const AppContent: React.FC = () => {
     const { view, setView, logout } = useNutrix();
@@ -75,7 +76,11 @@ const NavItem: React.FC<{ icon: React.ReactNode, label: string, active: boolean,
         onClick={onClick}
         className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl transition font-medium ${active ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-200' : 'text-slate-500 hover:bg-slate-50 hover:text-emerald-600'}`}
     >
-        {React.cloneElement(icon as React.ReactElement, { size: 20 })}
+        {React.isValidElement(icon) && 
+  React.cloneElement(icon as React.ReactElement<{ size?: number }>, { 
+    size: 20 
+  })
+}
         <span>{label}</span>
     </button>
 );
@@ -85,7 +90,11 @@ const MobileNavItem: React.FC<{ icon: React.ReactNode, active: boolean, onClick:
         onClick={onClick}
         className={`p-3 rounded-2xl transition-all ${active ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400'}`}
     >
-        {React.cloneElement(icon as React.ReactElement, { size: 24 })}
+        {React.isValidElement(icon) && 
+  React.cloneElement(icon as React.ReactElement<{ size?: number }>, { 
+    size: 20 
+  })
+}
     </button>
 );
 

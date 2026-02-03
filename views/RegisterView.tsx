@@ -60,7 +60,7 @@ const RegisterView: React.FC = () => {
 
                 <div className="mt-6 text-center">
                     <button
-                        onClick={() => setView("login")}
+                        onClick={() => setView("loginView")}
                         className="text-emerald-600 font-medium hover:underline"
                     >
                         Already have an account? Sign In

@@ -22,6 +22,7 @@ interface NutrixContextProps {
     activityLevels: typeof ACTIVITY_LEVELS;
     totals: ReturnType<typeof calculateDailyTotals>;
     macroData: { name: string; value: number; color: string }[];
+    
 
     logout: () => void;
     addToPantry: (food: FoodProduct) => void;
