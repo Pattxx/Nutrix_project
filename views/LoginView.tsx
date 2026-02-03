@@ -12,9 +12,9 @@ const LoginView: React.FC = () => {
         const user = login(authEmail);
         if (user) {
             setCurrentUser(user);
-            setView("dashboard");
+            setView("dashboardView");
         } else {
-            setView("register");
+            setView("registerView");
         }
     };
 
@@ -48,7 +48,7 @@ const LoginView: React.FC = () => {
 
                 <div className="mt-6 text-center">
                     <button
-                        onClick={() => setView("register")}
+                        onClick={() => setView("registerView")}
                         className="text-emerald-600 font-medium hover:underline"
                     >
                         Don't have an account? Sign Up

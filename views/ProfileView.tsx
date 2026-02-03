@@ -3,7 +3,7 @@ import { Flame } from "lucide-react";
 import { useNutrix } from "../context/NutrixContext";
 
 const ProfileView: React.FC = () => {
-    const { currentUser, setCurrentUser, setView, calculateDailyTarget, ACTIVITY_LEVELS } = useNutrix();
+    const { currentUser, setCurrentUser, setView, calculateDailyTarget, activityLevels } = useNutrix();
 
     if (!currentUser) return null;
 

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { UserProfile, FoodProduct, MealEntry, AppView, CalculatedRecipe } from "../types";
-import { INITIAL_FOOD_DATABASE } from "../constants";
+import { INITIAL_FOOD_DATABASE,ACTIVITY_LEVELS } from "../constants";
 import { calculateDailyTarget, calculateDailyTotals, calculateRecipeNutrition } from "../utils";
 import { searchOpenFoodFacts } from "../app_services/foodApi";
 import { generateRecipe } from "../app_services/geminiService";
@@ -9,6 +9,7 @@ interface NutrixContextProps {
     view: AppView;
     setView: (v: AppView) => void;
     currentUser: UserProfile | null;
+    setCurrentUser: React.Dispatch<React.SetStateAction<UserProfile | null>>;
     pantry: string[];
     mealLogs: MealEntry[];
     foodDatabase: FoodProduct[];
@@ -18,6 +19,7 @@ interface NutrixContextProps {
     searchResults: FoodProduct[];
     isSearching: boolean;
     dailyTarget: number;
+    activityLevels: typeof ACTIVITY_LEVELS;
     totals: ReturnType<typeof calculateDailyTotals>;
     macroData: { name: string; value: number; color: string }[];
 
@@ -28,6 +30,7 @@ interface NutrixContextProps {
     performSearch: () => Promise<void>;
     triggerRecipeGen: () => Promise<void>;
     setSearchQuery: (query: string) => void;
+    calculateDailyTarget: (profile: UserProfile) => number;
 }
 
 const NutrixContext = createContext<NutrixContextProps>({} as any);
@@ -136,10 +139,11 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     return (
         <NutrixContext.Provider value={{
-            view, setView, currentUser, pantry, mealLogs, foodDatabase, currentRecipe,
+            view, setView, currentUser, setCurrentUser,pantry,activityLevels: ACTIVITY_LEVELS,
+            mealLogs, foodDatabase, currentRecipe,
             isGeneratingRecipe, searchQuery, searchResults, isSearching, dailyTarget,
             totals, macroData, logout, addToPantry, removeFromPantry, addMeal,
-            performSearch, triggerRecipeGen, setSearchQuery
+            performSearch, triggerRecipeGen, setSearchQuery,calculateDailyTarget
         }}>
             {children}
         </NutrixContext.Provider>

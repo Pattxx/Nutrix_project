@@ -6,8 +6,8 @@ export interface UserProfile {
   height: number; // in cm
   gender: 'male' | 'female';
   goal: 'lose' | 'maintain' | 'gain';
-    activityLevel: 1.2 | 1.375 | 1.55 | 1.725 | 1.9;
-    email?: string;
+  activityLevel:'sedentary' | 'light' | 'moderate' | 'active' | 'veryActive';
+  email?: string;
 }
 
 export interface FoodProduct {

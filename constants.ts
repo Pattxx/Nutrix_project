@@ -1,5 +1,5 @@
 
-import { FoodProduct } from './types';
+import {FoodProduct,UserProfile } from './types';
 
 export const INITIAL_FOOD_DATABASE: FoodProduct[] = [
   { id: '1', name: 'Chicken Breast', calories: 165, protein: 31, fat: 3.6, carbs: 0, source: 'local' },
@@ -12,10 +12,21 @@ export const INITIAL_FOOD_DATABASE: FoodProduct[] = [
   { id: '8', name: 'Peanut Butter', calories: 588, protein: 25, fat: 50, carbs: 20, source: 'local' },
 ];
 
-export const ACTIVITY_LEVELS = [
-  { value: 1.2, label: 'Sedentary (office job, little exercise)' },
-  { value: 1.375, label: 'Lightly Active (exercise 1-3 days/week)' },
-  { value: 1.55, label: 'Moderately Active (exercise 3-5 days/week)' },
-  { value: 1.725, label: 'Very Active (hard exercise 6-7 days/week)' },
-  { value: 1.9, label: 'Extra Active (very hard exercise & physical job)' },
-];
+export const ACTIVITY_LEVELS = {
+    sedentary: { label: 'Sedentary (little or no exercise)', factor: 1.2 },
+    light: { label: 'Lightly active (1-2 days/week)', factor: 1.375 },
+    moderate: { label: 'Moderately active (3-5 days/week)', factor: 1.55 },
+    active: { label: 'Very active (6-7 days/week)', factor: 1.725 },
+    veryActive: { label: 'Extra active (physical job/intense training)', factor: 1.9 }
+};
+
+export const calculateDailyTarget = (user: UserProfile): number => {
+    const { weight, height, age, gender, activityLevel } = user;
+    
+    const genderOffset = gender === 'male' ? 5 : -161;
+    const bmr = (10 * weight) + (6.25 * height) - (5 * age) + genderOffset;
+
+    const factor = ACTIVITY_LEVELS[activityLevel as keyof typeof ACTIVITY_LEVELS]?.factor || 1.2;
+
+    return Math.round(bmr * factor);
+};
