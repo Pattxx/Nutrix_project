@@ -4,7 +4,7 @@ import { Flame } from "lucide-react";
 import { useNutrix } from "../context/NutrixContext";
 
 const DashboardView: React.FC = () => {
-    const { currentUser, setView, dailyTarget, totals, macroData, todayLogs } = useNutrix();
+    const { currentUser, setView, dailyTarget, totals, macroData, mealLogs } = useNutrix();
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -81,10 +81,10 @@ const DashboardView: React.FC = () => {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                     <h3 className="text-slate-500 text-sm font-medium mb-2">Today's Log</h3>
                     <div className="space-y-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                        {todayLogs.length === 0 ? (
+                        {mealLogs.length === 0 ? (
                             <p className="text-sm text-slate-400 italic">No food logged yet.</p>
                         ) : (
-                            todayLogs.map(log => (
+                            mealLogs.map(log => (
                                 <div key={log.id} className="flex justify-between items-center text-sm border-b border-slate-50 pb-2">
                                     <div>
                                         <p className="font-semibold">{log.name}</p>
@@ -96,7 +96,7 @@ const DashboardView: React.FC = () => {
                         )}
                     </div>
                     <button
-                        onClick={() => setView('pantry')}
+                        onClick={() => setView('pantryView')}
                         className="mt-4 w-full py-2 bg-emerald-50 text-emerald-600 rounded-lg text-sm font-semibold hover:bg-emerald-100 transition"
                     >
                         Add Entry

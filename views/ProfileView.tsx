@@ -13,7 +13,7 @@ const ProfileView: React.FC = () => {
             {/* Form */}
             <div>
                 <h2 className="text-3xl font-bold">My Profile</h2>
-                <p className="text-slate-500 mb-6">Calculate your Mifflin–St Jeor target.</p>
+                <p className="text-slate-500 mb-6">Calculate your Mifflinï¿½St Jeor target.</p>
 
                 <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm max-w-2xl">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -33,7 +33,7 @@ const ProfileView: React.FC = () => {
                     </div>
 
                     <button
-                        onClick={() => setView('dashboard')}
+                        onClick={() => setView('dashboardView')}
                         className="mt-8 w-full py-4 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition shadow-lg shadow-emerald-100"
                     >
                         Save Profile
@@ -43,7 +43,7 @@ const ProfileView: React.FC = () => {
 
             {/* Info */}
             <div className="space-y-6">
-                <h2 className="text-3xl font-bold">What is  Mifflin–St Jeor method? </h2>
+                <h2 className="text-3xl font-bold">What is  Mifflinï¿½St Jeor method? </h2>
                 <p className="text-slate-500">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. In augue purus, commodo et ex sagittis, feugiat mollis felis...
                 </p>
