@@ -1,19 +1,29 @@
 import React, { useState } from "react";
 import { Search, ChefHat, Trash2, PlusCircle } from "lucide-react";
 import { useNutrix } from "../context/NutrixContext";
+import { FoodProduct } from "../types";
+import { searchOpenFoodFacts } from "../app_services/foodApi";
 
 const PantryView: React.FC = () => {
     const { pantry, addToPantry, removeFromPantry, addMeal, setView } = useNutrix();
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchResults, setSearchResults] = useState<any[]>([]); // Replace any with FoodProduct
+    const [searchResults, setSearchResults] = useState<FoodProduct[]>([]);
     const [isSearching, setIsSearching] = useState(false);
 
     const performSearch = async () => {
         if (!searchQuery) return;
         setIsSearching(true);
-        // TODO: call your OpenFoodFacts search here
-        setIsSearching(false);
+        try {
+            const results = await searchOpenFoodFacts(searchQuery);
+            setSearchResults(results);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to fetch products. Try again.");
+        } finally {
+            setIsSearching(false);
+        }
     };
+
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
@@ -54,7 +64,7 @@ const PantryView: React.FC = () => {
                                 <p>Start searching for foods</p>
                             </div>
                         )}
-                        {searchResults.map(res => (
+                        {searchResults.map((res) => (
                             <div key={res.id} className="p-3 border border-slate-100 rounded-xl hover:bg-slate-50 flex justify-between items-center group transition">
                                 <div>
                                     <p className="font-bold">{res.name}</p>
@@ -99,7 +109,7 @@ const PantryView: React.FC = () => {
                     </div>
                     {pantry.length > 0 && (
                         <button
-                            onClick={() => setView('recipe-gen')}
+                            onClick={() => setView('recipeGenView')}
                             className="mt-8 w-full py-3 bg-emerald-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-700 transition shadow-lg shadow-emerald-200"
                         >
                             <ChefHat size={20} />
