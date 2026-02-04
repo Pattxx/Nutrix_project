@@ -77,8 +77,11 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
 
     const addToPantry = (food: FoodProduct) => {
-        if (!pantry.includes(food.name)) setPantry([...pantry, food.name]);
+        if (!pantry.includes(food.name)) {
+            setPantry([...pantry, food.name]);
+        }
     };
+
 
     const removeFromPantry = (name: string) => {
         setPantry(pantry.filter(item => item !== name));
@@ -123,7 +126,7 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         }
     };
 
-    // --- Computed values ---
+
     const dailyTarget = currentUser ? calculateDailyTarget(currentUser) : 2000;
     const todayLogs = useMemo(() => {
         const start = new Date().setHours(0, 0, 0, 0);

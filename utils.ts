@@ -46,7 +46,6 @@ export const calculateRecipeNutrition = (recipe: AIRecipe, foodDatabase: FoodPro
   let totalCarbs = 0;
 
   recipe.ingredients.forEach(ing => {
-    // fuzzy search or exact match in our DB
     const food = foodDatabase.find(f => f.name.toLowerCase().includes(ing.name.toLowerCase())) 
                 || foodDatabase.find(f => ing.name.toLowerCase().includes(f.name.toLowerCase()));
     

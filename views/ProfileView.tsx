@@ -111,8 +111,6 @@ const ProfileView: React.FC = () => {
                 </div>
 
 
-
-
                 <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 flex items-center justify-between">
                     <div>
                             <p className="text-emerald-700 font-bold uppercase text-xs tracking-widest mb-1">
