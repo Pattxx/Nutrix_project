@@ -1,4 +1,4 @@
-import{ ACTIVITY_LEVELS} from'./constants';
+//import{ ACTIVITY_LEVELS} from'./constants';
 import { UserProfile, FoodProduct, MealEntry, AIRecipe, CalculatedRecipe } from './types';
 
 /**
@@ -10,11 +10,12 @@ export const calculateDailyTarget = (profile: UserProfile): number => {
   let bmr: number;
   if (gender === 'male') {
     bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-  } else {
+  }
+  else {
     bmr = 10 * weight + 6.25 * height - 5 * age - 161;
   }
 
-  const tdee = bmr * ACTIVITY_LEVELS[activityLevel as keyof typeof ACTIVITY_LEVELS]?.factor || 1.2;
+    const tdee = bmr * activityLevel;
 
   switch (goal) {
     case 'lose': return Math.round(tdee - 500);

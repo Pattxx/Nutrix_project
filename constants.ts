@@ -11,11 +11,10 @@ export const INITIAL_FOOD_DATABASE: FoodProduct[] = [
   { id: '7', name: 'Banana', calories: 89, protein: 1.1, fat: 0.3, carbs: 23, source: 'local' },
   { id: '8', name: 'Peanut Butter', calories: 588, protein: 25, fat: 50, carbs: 20, source: 'local' },
 ];
-
-export const ACTIVITY_LEVELS = {
-    sedentary: { label: 'Sedentary (little or no exercise)', factor: 1.2 },
-    light: { label: 'Lightly active (1-2 days/week)', factor: 1.375 },
-    moderate: { label: 'Moderately active (3-5 days/week)', factor: 1.55 },
-    active: { label: 'Very active (6-7 days/week)', factor: 1.725 },
-    veryActive: { label: 'Extra active (physical job/intense training)', factor: 1.9 }
-};
+export const ACTIVITY_LEVELS = [
+    { value: 1.2, label: 'Sedentary (office job, little exercise)' },
+    { value: 1.375, label: 'Lightly Active (exercise 1-3 days/week)' },
+    { value: 1.55, label: 'Moderately Active (exercise 3-5 days/week)' },
+    { value: 1.725, label: 'Very Active (hard exercise 6-7 days/week)' },
+    { value: 1.9, label: 'Extra Active (very hard exercise & physical job)' },
+];
