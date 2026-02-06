@@ -1,4 +1,7 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
+import dotenv from "dotenv";
+import path from "path";
+dotenv.config({ path: "./config.env" });
 
 const uri = process.env.URI || "";
 const client = new MongoClient(uri, {
@@ -20,6 +23,6 @@ try {
     console.error(err);
 }
 
-let db = client.db("Nutrix_data");
+let db = client.db("Nutrix_Data");
 
 export default db;

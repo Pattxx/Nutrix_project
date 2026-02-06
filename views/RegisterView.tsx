@@ -11,14 +11,12 @@ const RegisterView: React.FC = () => {
     const [authEmail, setAuthEmail] = useState("");
 
     // Handle registration
-    const handleRegister = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!authName || !authEmail) return alert("Fill in all fields");
+    const handleRegister = async () => { 
+        const user = await register(authName, authEmail);
+        setCurrentUser(user);  
+        setView("profileView");     
 
-        const user = register(authName, { email: authEmail });
-        setCurrentUser(user);  // save user in context
-        setView("profileView");    // switch to Profile view
-    };
+};
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-emerald-600 p-4">

@@ -4,15 +4,8 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-
-router.get("/", async(req, res) => {
-    let collection = await db.collection("records");
-    let results = await collection.find({}).toArray();
-    res.send(results).status(200);
-});
-
 // This section will help you get a single record by id
-router.get("/:id", async(req, res) => {
+router.get("/:name", async(req, res) => {
     let collection = await db.collection("records");
     let query = { _id: new ObjectId(req.params.id) };
     let result = await collection.findOne(query);
@@ -23,23 +16,21 @@ router.get("/:id", async(req, res) => {
 
 // This section will help you create a new record.
 router.post("/", async(req, res) => {
-    try {
-        let newDocument = {
-            name: req.body.name,
-            position: req.body.position,
-            level: req.body.level,
-        };
-        let collection = await db.collection("records");
-        let result = await collection.insertOne(newDocument);
-        res.send(result).status(204);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error adding record");
+    const collection = db.collection("Users");
+    const { email } = req.body;
+
+    // Sprawdzenie unikalności
+    const existingUser = await collection.findOne({ email: email });
+    if (existingUser) {
+        return res.status(409).json({ message: "Ten email jest już zarejestrowany!" });
     }
+
+    const result = await collection.insertOne(req.body);
+    res.status(201).json(result);
 });
 
 // This section will help you update a record by id.
-router.patch("/:id", async(req, res) => {
+router.patch("/:email", async(req, res) => {
     try {
         const query = { _id: new ObjectId(req.params.id) };
         const updates = {
