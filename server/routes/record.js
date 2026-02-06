@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-// This section will help you get a single record by id
+
 router.get("/:name", async(req, res) => {
     let collection = await db.collection("records");
     let query = { _id: new ObjectId(req.params.id) };
@@ -14,12 +14,11 @@ router.get("/:name", async(req, res) => {
     else res.send(result).status(200);
 });
 
-// This section will help you create a new record.
+// registration.
 router.post("/", async(req, res) => {
     const collection = db.collection("Users");
     const { email } = req.body;
 
-    // Sprawdzenie unikalności
     const existingUser = await collection.findOne({ email: email });
     if (existingUser) {
         return res.status(409).json({ message: "Ten email jest już zarejestrowany!" });
@@ -29,7 +28,6 @@ router.post("/", async(req, res) => {
     res.status(201).json(result);
 });
 
-// This section will help you update a record by id.
 router.patch("/:email", async(req, res) => {
     try {
         const query = { _id: new ObjectId(req.params.id) };
@@ -50,7 +48,7 @@ router.patch("/:email", async(req, res) => {
     }
 });
 
-// This section will help you delete a record
+
 router.delete("/:id", async(req, res) => {
     try {
         const query = { _id: new ObjectId(req.params.id) };
