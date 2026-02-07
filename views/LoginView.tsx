@@ -6,6 +6,7 @@ import { login } from "../app_services/auth.service";
 const LoginView: React.FC = () => {
     const { setView, setCurrentUser, logout } = useNutrix();
     const [authEmail, setAuthEmail] = useState("");
+    const [authPassword, setAuthPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -14,18 +15,19 @@ const LoginView: React.FC = () => {
         setError(null);
         setLoading(true);
         try {
-            const user = await login(authEmail);
+            const user = await login(authEmail, authPassword);
             if (user) {
                 setCurrentUser(user);
                 setView("dashboardView");
             } else {
                 try { logout(); } catch {}
-                setError("Email not registered. Please sign up.");
-                setView("registerView");
+                setError("Invalid email or password. Please try again.");
+                setAuthPassword("");
             }
         } catch (err) {
             console.error("Login failed:", err);
             setError("Login failed. Please try again later.");
+            setAuthPassword("");
         } finally {
             setLoading(false);
         }
@@ -52,6 +54,17 @@ const LoginView: React.FC = () => {
                             value={authEmail}
                             onChange={(e) => setAuthEmail(e.target.value)}
                             placeholder="you@example.com"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                        <input
+                            type="password"
+                            required
+                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+                            value={authPassword}
+                            onChange={(e) => setAuthPassword(e.target.value)}
+                            placeholder="Enter your password"
                         />
                     </div>
                     <button

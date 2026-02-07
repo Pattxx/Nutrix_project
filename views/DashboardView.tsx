@@ -1,10 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { Flame } from "lucide-react";
 import { useNutrix } from "../context/NutrixContext";
+import { fetchWeeklyStats } from "../app_services/history.service";
 
 const DashboardView: React.FC = () => {
     const { currentUser, setView, dailyTarget, totals, macroData, mealLogs } = useNutrix();
+    const [weeklyData, setWeeklyData] = useState<Array<{ date: string; calories: number }>>([]);
+    const [avgCalories, setAvgCalories] = useState(0);
+
+    useEffect(() => {
+        const loadWeekly = async () => {
+            if (!currentUser?.email) return;
+            try {
+                const data = await fetchWeeklyStats(currentUser.email);
+                setWeeklyData(data);
+                
+                // calculate average
+                if (data.length > 0) {
+                    const total = data.reduce((sum, day) => sum + day.calories, 0);
+                    setAvgCalories(Math.round(total / data.length));
+                }
+            } catch (err) {
+                console.warn("Failed to load weekly stats:", err);
+            }
+        };
+        loadWeekly();
+    }, [currentUser]);
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -81,10 +103,18 @@ const DashboardView: React.FC = () => {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                     <h3 className="text-slate-500 text-sm font-medium mb-2">Today's Log</h3>
                     <div className="space-y-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                        {mealLogs.length === 0 ? (
+                        {mealLogs.filter(log => {
+                            const logDate = new Date(log.timestamp);
+                            const today = new Date();
+                            return logDate.toDateString() === today.toDateString();
+                        }).length === 0 ? (
                             <p className="text-sm text-slate-400 italic">No food logged yet.</p>
                         ) : (
-                            mealLogs.map(log => (
+                            mealLogs.filter(log => {
+                                const logDate = new Date(log.timestamp);
+                                const today = new Date();
+                                return logDate.toDateString() === today.toDateString();
+                            }).map(log => (
                                 <div key={log.id} className="flex justify-between items-center text-sm border-b border-slate-50 pb-2">
                                     <div>
                                         <p className="font-semibold">{log.name}</p>
@@ -110,11 +140,16 @@ const DashboardView: React.FC = () => {
                 <h3 className="text-lg font-bold mb-6">Weekly Consumption</h3>
                 <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={[{ day: 'Today', calories: totals.calories }, { day: 'Avg', calories: dailyTarget }]}>
+                        <BarChart data={[{ day: 'Today', calories: totals.calories }, { day: 'Avg', calories: avgCalories || dailyTarget }]}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                             <XAxis dataKey="day" axisLine={false} tickLine={false} />
-                            <YAxis axisLine={false} tickLine={false} />
-                            <Tooltip cursor={{ fill: '#f8fafc' }} />
+                            <YAxis axisLine={false} tickLine={false} domain={[0, dailyTarget]} />
+                            <Tooltip 
+                                cursor={{ fill: '#f8fafc' }}
+                                formatter={(value: any) => `calories: ${value}`}
+                                labelFormatter={() => ''}
+                                contentStyle={{ border: 'none', borderRadius: '6px' }}
+                            />
                             <Bar dataKey="calories" fill="#10b981" radius={[4, 4, 0, 0]} barSize={60} />
                         </BarChart>
                     </ResponsiveContainer>

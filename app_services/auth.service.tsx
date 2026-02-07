@@ -1,20 +1,16 @@
 import { UserProfile } from "../types";
 
 
-/*
-NOTE:Mock auth, no api calls
-*/
-
 const USER_KEY = "nutrix_user";
 
 // auth.service.tsx
 
-export async function login(email: string): Promise<UserProfile | null> {
+export async function login(email: string, password: string): Promise<UserProfile | null> {
     try {
         const response = await fetch("http://localhost:5050/record/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ email, password }),
         });
         const data = await response.json();
 
@@ -30,9 +26,11 @@ export async function login(email: string): Promise<UserProfile | null> {
         return null;
     }
 }
+
 export async function register(
     name: string, 
-    email: string, 
+    email: string,
+    password: string,
     profileOverrides?: Partial<UserProfile>
 ): Promise<UserProfile> {
     const user: UserProfile = {
@@ -50,11 +48,11 @@ export async function register(
     const response = await fetch("http://localhost:5050/record", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
+        body: JSON.stringify({ ...user, password }),
     });
 
     const data = await response.json();
-    if (!response.ok) throw new Error(data.message || "Błąd serwera");
+    if (!response.ok) throw new Error(data.message || "Server error");
 
     localStorage.setItem(USER_KEY, JSON.stringify(user));
     return user;

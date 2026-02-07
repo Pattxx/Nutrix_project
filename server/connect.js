@@ -2,7 +2,7 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
 import path from "path";
 dotenv.config({ path: "./config.env" });
-
+// Create a new MongoClient
 const uri = process.env.URI || "";
 const client = new MongoClient(uri, {
     serverApi: {
@@ -11,9 +11,8 @@ const client = new MongoClient(uri, {
         deprecationErrors: true,
     },
 });
-
+// Connect the client to the server 
 try {
-
     await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log(
