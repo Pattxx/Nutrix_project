@@ -4,17 +4,30 @@ import { useNutrix } from "../context/NutrixContext";
 import { login } from "../app_services/auth.service";
 
 const LoginView: React.FC = () => {
-    const { setView, setCurrentUser } = useNutrix();
+    const { setView, setCurrentUser, logout } = useNutrix();
     const [authEmail, setAuthEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        const user = login(authEmail);
-        if (user) {
-            setCurrentUser(user);
-            setView("dashboardView");
-        } else {
-            setView("registerView");
+        setError(null);
+        setLoading(true);
+        try {
+            const user = await login(authEmail);
+            if (user) {
+                setCurrentUser(user);
+                setView("dashboardView");
+            } else {
+                try { logout(); } catch {}
+                setError("Email not registered. Please sign up.");
+                setView("registerView");
+            }
+        } catch (err) {
+            console.error("Login failed:", err);
+            setError("Login failed. Please try again later.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -41,10 +54,18 @@ const LoginView: React.FC = () => {
                             placeholder="you@example.com"
                         />
                     </div>
-                    <button className="w-full py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition shadow-lg">
-                        Sign In
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className={`w-full py-3 text-white font-semibold rounded-lg transition shadow-lg ${loading ? 'bg-emerald-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700'}`}
+                    >
+                        {loading ? 'Signing in...' : 'Sign In'}
                     </button>
                 </form>
+
+                {error && (
+                    <div className="mt-4 text-center text-red-600 font-medium">{error}</div>
+                )}
 
                 <div className="mt-6 text-center">
                     <button
