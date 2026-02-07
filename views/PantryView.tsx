@@ -69,11 +69,11 @@ const PantryView: React.FC = () => {
                                 <div>
                                     <p className="font-bold">{res.name}</p>
                                     <p className="text-xs text-slate-400">
-                                        {res.calories} kcal • P:{res.protein}g • F:{res.fat}g • C:{res.carbs}g
+                                        {res.calories} kcal ï¿½ P:{res.protein}g ï¿½ F:{res.fat}g ï¿½ C:{res.carbs}g
                                     </p>
                                 </div>
                                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition">
-                                    <button onClick={() => addToPantry(res.name)} className="p-2 text-emerald-600 bg-emerald-50 rounded-lg hover:bg-emerald-100">
+                                    <button onClick={() => addToPantry(res)} className="p-2 text-emerald-600 bg-emerald-50 rounded-lg hover:bg-emerald-100">
                                         <ChefHat size={18} />
                                     </button>
                                     <button onClick={() => {

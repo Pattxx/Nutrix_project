@@ -18,11 +18,9 @@ app.use(cors());
 app.use(express.json());
 app.use("/record", records);
 
-// generic error handler (must be after routes)
 app.use((err, req, res, next) => {
     console.error('Server error:', err && err.message ? err.message : err);
 
-    // body-parser / raw-body parse failure often sets `type === 'entity.parse.failed'`
     const isJsonParseError = err && (err.type === 'entity.parse.failed' || err instanceof SyntaxError || err.status === 400);
     if (isJsonParseError) {
         return res.status(400).json({ message: 'Invalid JSON body' });

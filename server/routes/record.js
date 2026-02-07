@@ -4,14 +4,37 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
+// meal history endpoints
+router.post("/history", async(req, res) => {
+    try {
+        const collection = db.collection("History");
+        const entry = req.body;
 
-router.get("/:name", async(req, res) => {
-    let collection = await db.collection("records");
-    let query = { _id: new ObjectId(req.params.id) };
-    let result = await collection.findOne(query);
+        if (!entry || !entry.email || !entry.name) {
+            return res.status(400).json({ message: "Invalid history entry" });
+        }
 
-    if (!result) res.send("Not found").status(404);
-    else res.send(result).status(200);
+        const result = await collection
+        const inserted = await collection.findOne({ _id: result.insertedId });
+        return res.status(201).json(inserted);
+    } catch (err) {
+        console.error("History save error:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+});
+
+router.get("/history", async(req, res) => {
+    try {
+        const collection = db.collection("History");
+        const email = req.query.email;
+
+        const query = email ? { email: String(email) } : {};
+        const docs = await collection.find(query).sort({ timestamp: -1 }).toArray();
+        return res.status(200).json(docs);
+    } catch (err) {
+        console.error("History fetch error:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
 });
 
 // registration.
@@ -21,7 +44,7 @@ router.post("/", async(req, res) => {
 
     const existingUser = await collection.findOne({ email: email });
     if (existingUser) {
-        return res.status(409).json({ message: "Ten email jest już zarejestrowany!" });
+        return res.status(409).json({ message: "Email already registered" });
     }
 
     const result = await collection.insertOne(req.body);
@@ -51,24 +74,5 @@ router.post("/login", async(req, res) => {
     }
 });
 
-router.patch("/:email", async(req, res) => {
-    try {
-        const query = { _id: new ObjectId(req.params.id) };
-        const updates = {
-            $set: {
-                name: req.body.name,
-                position: req.body.position,
-                level: req.body.level,
-            },
-        };
-
-        let collection = await db.collection("records");
-        let result = await collection.updateOne(query, updates);
-        res.send(result).status(200);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error updating record");
-    }
-});
 
 export default router;

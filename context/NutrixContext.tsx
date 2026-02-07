@@ -3,6 +3,7 @@ import { UserProfile, FoodProduct, MealEntry, AppView, CalculatedRecipe } from "
 import { INITIAL_FOOD_DATABASE,ACTIVITY_LEVELS } from "../constants";
 import { calculateDailyTarget, calculateDailyTotals, calculateRecipeNutrition } from "../utils";
 import { searchOpenFoodFacts } from "../app_services/foodApi";
+import { saveMealLog, fetchMealLogs } from "../app_services/history.service";
 import { generateRecipe } from "../app_services/geminiService";
 
 interface NutrixContextProps {
@@ -62,6 +63,39 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setMealLogs(savedLogs ? JSON.parse(savedLogs) : []);
     }, []);
 
+    // load remote history when user logs in
+    useEffect(() => {
+        const loadRemote = async () => {
+            if (!currentUser || !currentUser.email) {
+                console.log('Skipping remote load: no currentUser or email', { currentUser });
+                return;
+            }
+            console.log('Loading remote history for:', currentUser.email);
+            try {
+                const remote = await fetchMealLogs(currentUser.email);
+                console.log('Remote history response:', remote);
+                if (remote && Array.isArray(remote)) {
+                    const mapped = remote.map((r: any) => ({
+                        id: r._id?.toString() || r.id,
+                        productId: r.productId,
+                        name: r.name,
+                        grams: r.grams,
+                        calories: r.calories,
+                        protein: r.protein,
+                        fat: r.fat,
+                        carbs: r.carbs,
+                        timestamp: r.timestamp,
+                    }));
+                    console.log('Setting mealLogs with', mapped.length, 'entries');
+                    setMealLogs(mapped);
+                }
+            } catch (err) {
+                console.error('Failed to load remote history:', err);
+            }
+        };
+        loadRemote();
+    }, [currentUser]);
+
     useEffect(() => {
         if (currentUser) localStorage.setItem('nutrix_user', JSON.stringify(currentUser));
         localStorage.setItem('nutrix_food', JSON.stringify(foodDatabase));
@@ -84,7 +118,7 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setPantry(pantry.filter(item => item !== name));
     };
 
-    const addMeal = (food: FoodProduct, grams: number) => {
+    const addMeal = async (food: FoodProduct, grams: number) => {
         const factor = grams / 100;
         const newEntry: MealEntry = {
             id: Math.random().toString(36).substr(2, 9),
@@ -97,8 +131,26 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             carbs: Math.round(food.carbs * factor),
             timestamp: Date.now()
         };
+
+        // optimistic UI update
         setMealLogs([newEntry, ...mealLogs]);
         setView('dashboardView');
+
+        // attempt to persist to server if we have a user
+        try {
+            const payload = {
+                ...newEntry,
+                // attach email if available
+                email: currentUser?.email || undefined,
+            };
+            const saved = await saveMealLog(payload);
+            // replace local entry id with server id if returned
+            if (saved && saved._id) {
+                setMealLogs(prev => prev.map(m => m === newEntry ? { ...m, id: saved._id.toString() } : m));
+            }
+        } catch (err) {
+            console.warn('Failed to save meal log remotely', err);
+        }
     };
 
     const performSearch = async () => {
