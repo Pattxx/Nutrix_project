@@ -3,8 +3,7 @@ import { UserProfile } from "../types";
 
 const USER_KEY = "nutrix_user";
 
-// auth.service.tsx
-
+//logging in 
 export async function login(email: string, password: string): Promise<UserProfile | null> {
     try {
         const response = await fetch("http://localhost:5050/record/login", {
@@ -26,7 +25,7 @@ export async function login(email: string, password: string): Promise<UserProfil
         return null;
     }
 }
-
+//registering a new user
 export async function register(
     name: string, 
     email: string,
