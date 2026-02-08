@@ -11,7 +11,7 @@ dotenv.config({ path: path.join(__dirname, "config.env") });
 const uri = process.env.URI;
 
 if (!uri) {
-    throw new Error("MONGODB_URI is not defined.");
+    throw new Error("MONGODB_URI is not defined in the environment variables. Check your config.env file path.");
 }
 
 const client = new MongoClient(uri, {
@@ -22,6 +22,17 @@ const client = new MongoClient(uri, {
     },
 });
 
-let db = client.db("Nutrix_Data");
+try {
+
+    await client.connect();
+    await client.db("admin").command({ ping: 1 });
+    console.log(
+        "Pinged your deployment. You successfully connected to MongoDB!"
+    );
+} catch (err) {
+    console.error(err);
+}
+
+let db = client.db("Nutrix_data");
 
 export default db;
