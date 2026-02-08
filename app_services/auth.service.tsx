@@ -1,35 +1,57 @@
 import { UserProfile } from "../types";
 
 
-/*
-  NOTE:Mock auth, no api calls
-*/
-
 const USER_KEY = "nutrix_user";
 
-export function login(email: string): UserProfile | null {
-    if (!email) return null;
+//logging in 
+export async function login(email: string, password: string): Promise<UserProfile | null> {
+    try {
+        const response = await fetch("http://localhost:5050/record/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
 
-    const saved = localStorage.getItem(USER_KEY);
-    if (!saved) return null;
+        if (!response.ok) {
+            console.warn("Login failed:", data?.message || response.statusText);
+            return null;
+        }
 
-    return JSON.parse(saved) as UserProfile;
+        localStorage.setItem(USER_KEY, JSON.stringify(data));
+        return data;
+    } catch (err) {
+        console.error("Login error:", err);
+        return null;
+    }
 }
-
-export function register(
-    name: string,
+//registering a new user
+export async function register(
+    name: string, 
+    email: string,
+    password: string,
     profileOverrides?: Partial<UserProfile>
-): UserProfile {
+): Promise<UserProfile> {
     const user: UserProfile = {
         name: name || "User",
+        email: email, 
         age: 25,
         weight: 70,
         height: 175,
         gender: "male",
         goal: "maintain",
-        activityLevel: 1.2,
+        activityLevel: "light",
         ...profileOverrides,
     };
+
+    const response = await fetch("http://localhost:5050/record/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...user, password }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Server error");
 
     localStorage.setItem(USER_KEY, JSON.stringify(user));
     return user;

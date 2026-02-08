@@ -1,4 +1,5 @@
 import { FoodProduct, MealEntry, UserProfile } from "../types";
+import { ACTIVITY_LEVELS } from "../constants";
 
 export function calculateMeal(
     food: FoodProduct,
@@ -7,7 +8,7 @@ export function calculateMeal(
     const factor = grams / 100;
 
     return {
-        id: crypto.randomUUID(),
+        id: Math.random().toString(36).substr(2, 9),
         productId: food.id,
         name: food.name,
         grams,
@@ -42,7 +43,7 @@ export function calculateDailyTarget(user: UserProfile): number {
             ? 10 * weight + 6.25 * height - 5 * age + 5
             : 10 * weight + 6.25 * height - 5 * age - 161;
 
-    return Math.round(bmr * activityLevel);
+    return Math.round(bmr * ACTIVITY_LEVELS[activityLevel as keyof typeof ACTIVITY_LEVELS]?.factor || 1.2);
 }
 export function calculateRecipeNutrition(
     recipe: {

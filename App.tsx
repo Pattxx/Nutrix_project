@@ -3,6 +3,7 @@ import DashboardView from "./views/DashboardView";
 import PantryView from "./views/PantryView";
 import RecipeGenView from "./views/RecipeGenView";
 import HistoryView from "./views/HistoryView";
+import WeeklyView from "./views/WeeklyView";
 import ProfileView from "./views/ProfileView";
 import LoginView from "./views/LoginView";
 import RegisterView from "./views/RegisterView";
@@ -10,7 +11,7 @@ import RegisterView from "./views/RegisterView";
 import { NutrixProvider, useNutrix } from "./context/NutrixContext";
 
 import {
-    LayoutDashboard, Utensils, ChefHat, History, User, LogOut
+    LayoutDashboard, Utensils, ChefHat, History, TrendingUp, User, LogOut
 } from "lucide-react";
 //connect to mongo
 
@@ -36,6 +37,7 @@ const AppContent: React.FC = () => {
                     <NavItem icon={<Utensils />} label="Log Food" active={view === 'pantryView'} onClick={() => setView('pantryView')} />
                     <NavItem icon={<ChefHat />} label="AI Recipes" active={view === 'recipeGenView'} onClick={() => setView('recipeGenView')} />
                     <NavItem icon={<History />} label="History" active={view === 'historyView'} onClick={() => setView('historyView')} />
+                    <NavItem icon={<TrendingUp />} label="Weekly" active={view === 'weeklyView'} onClick={() => setView('weeklyView')} />
                     <NavItem icon={<User />} label="Profile" active={view === 'profileView'} onClick={() => setView('profileView')} />
                 </nav>
                 <div className="p-4 border-t border-slate-100">
@@ -55,15 +57,17 @@ const AppContent: React.FC = () => {
                 {view === 'pantryView' && <PantryView />}
                 {view === 'recipeGenView' && <RecipeGenView />}
                 {view === 'historyView' && <HistoryView />}
+                {view === 'weeklyView' && <WeeklyView />}
                 {view === 'profileView' && <ProfileView />}
             </main>
 
             {/* Mobile Navigation */}
-            <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-4 py-2 flex justify-between items-center z-50">
+            <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-2 py-2 flex justify-between items-center z-50 overflow-x-auto">
                 <MobileNavItem icon={<LayoutDashboard />} active={view === 'dashboardView'} onClick={() => setView('dashboardView')} />
                 <MobileNavItem icon={<Utensils />} active={view === 'pantryView'} onClick={() => setView('pantryView')} />
                 <MobileNavItem icon={<ChefHat />} active={view === 'recipeGenView'} onClick={() => setView('recipeGenView')} />
                 <MobileNavItem icon={<History />} active={view === 'historyView'} onClick={() => setView('historyView')} />
+                <MobileNavItem icon={<TrendingUp />} active={view === 'weeklyView'} onClick={() => setView('weeklyView')} />
                 <MobileNavItem icon={<User />} active={view === 'profileView'} onClick={() => setView('profileView')} />
             </nav>
         </div>

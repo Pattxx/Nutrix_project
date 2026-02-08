@@ -51,4 +51,4 @@ export interface CalculatedRecipe extends AIRecipe {
   totalCarbs: number;
 }
 
-export type AppView = 'loginView' | 'registerView' | 'dashboardView' | 'pantryView' | 'recipeGenView' | 'historyView' | 'profileView';
+export type AppView = 'loginView' | 'registerView' | 'dashboardView' | 'pantryView' | 'recipeGenView' | 'historyView' | 'profileView' | 'weeklyView';

@@ -1,77 +1,173 @@
 import express from "express";
 import db from "../connect.js";
+import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-
-router.get("/", async(req, res) => {
-    let collection = await db.collection("records");
-    let results = await collection.find({}).toArray();
-    res.send(results).status(200);
-});
-
-// This section will help you get a single record by id
-router.get("/:id", async(req, res) => {
-    let collection = await db.collection("records");
-    let query = { _id: new ObjectId(req.params.id) };
-    let result = await collection.findOne(query);
-
-    if (!result) res.send("Not found").status(404);
-    else res.send(result).status(200);
-});
-
-// This section will help you create a new record.
-router.post("/", async(req, res) => {
+// meal history endpoints
+// save meal history
+router.post("/history", async(req, res) => {
     try {
-        let newDocument = {
-            name: req.body.name,
-            position: req.body.position,
-            level: req.body.level,
-        };
-        let collection = await db.collection("records");
-        let result = await collection.insertOne(newDocument);
-        res.send(result).status(204);
+        const collection = db.collection("History");
+        const entry = req.body;
+
+        if (!entry || !entry.email || !entry.name) {
+            return res.status(400).json({ message: "Invalid history entry" });
+        }
+
+        const result = await collection.insertOne(entry);
+        const inserted = await collection.findOne({ _id: result.insertedId });
+
+        return res.status(201).json(inserted);
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error adding record");
+        console.error("History save error:", err);
+        return res.status(500).json({ message: "Server error" });
     }
 });
 
-// This section will help you update a record by id.
-router.patch("/:id", async(req, res) => {
+// fetch meal history
+router.get("/history", async(req, res) => {
     try {
-        const query = { _id: new ObjectId(req.params.id) };
-        const updates = {
-            $set: {
-                name: req.body.name,
-                position: req.body.position,
-                level: req.body.level,
-            },
-        };
+        const collection = db.collection("History");
+        const email = req.query.email;
 
-        let collection = await db.collection("records");
-        let result = await collection.updateOne(query, updates);
-        res.send(result).status(200);
+        const query = email ? { email: String(email) } : {};
+        const docs = await collection
+            .find(query)
+            .sort({ timestamp: -1 })
+            .toArray();
+
+        return res.status(200).json(docs);
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error updating record");
+        console.error("History fetch error:", err);
+        return res.status(500).json({ message: "Server error" });
     }
 });
 
-// This section will help you delete a record
-router.delete("/:id", async(req, res) => {
+// weekly stats 
+router.get("/history/weekly", async(req, res) => {
     try {
-        const query = { _id: new ObjectId(req.params.id) };
+        const collection = db.collection("History");
+        const email = req.query.email;
 
-        const collection = db.collection("records");
-        let result = await collection.deleteOne(query);
+        if (!email) return res.status(400).json({ message: "Email is required" });
 
-        res.send(result).status(200);
+        // Calculate date 7 days ago
+        const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+        // Fetch entries from the last 7 days
+        const entries = await collection
+            .find({
+                email: String(email),
+                timestamp: { $gte: sevenDaysAgo },
+            })
+            .toArray();
+        // Group calories by day 
+        const dailyStats = {};
+        entries.forEach((entry) => {
+            const date = new Date(entry.timestamp);
+            date.setHours(0, 0, 0, 0);
+            const dateKey = date.toISOString().split('T')[0]; // YYYY-MM-DD
+            dailyStats[dateKey] = (dailyStats[dateKey] || 0) + (entry.calories || 0);
+        });
+
+        // Convert to array and sort by date
+        const weeklyData = Object.entries(dailyStats)
+            .map(([date, calories]) => ({ date, calories }))
+            .sort((a, b) => a.date.localeCompare(b.date));
+
+        return res.status(200).json(weeklyData);
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error deleting record");
+        console.error("Weekly stats error:", err);
+        return res.status(500).json({ message: "Server error" });
     }
 });
+// update user profile
+router.put("/user/:email", async(req, res) => {
+    try {
+        const collection = db.collection("Users");
+        const email = req.params.email;
+        const { _id, ...updates } = req.body; // Exclude _id from updates
+
+        if (!email) return res.status(400).json({ message: "Email is required" });
+
+        const result = await collection.updateOne({ email: email }, { $set: updates });
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const updated = await collection.findOne({ email: email });
+        return res.status(200).json(updated);
+    } catch (err) {
+        console.error("Update user error:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+});
+
+// registration. check if email exists, hash password, save user
+router.post("/register", async(req, res) => {
+    try {
+        const collection = db.collection("Users");
+        const { email, password, ...userData } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
+        const existingUser = await collection.findOne({ email: email });
+        if (existingUser) {
+            return res.status(409).json({ message: "Email already registered" });
+        }
+
+        // Hash password with bcrypt
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const result = await collection.insertOne({
+            ...userData,
+            email,
+            password: hashedPassword,
+            createdAt: new Date(),
+        });
+
+        const insertedUser = await collection.findOne({ _id: result.insertedId });
+        const { password: _, ...safeUser } = insertedUser;
+        res.status(201).json(safeUser);
+    } catch (err) {
+        console.error("Registration error:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// login - check email and password
+router.post("/login", async(req, res) => {
+    try {
+        const collection = db.collection("Users");
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
+        const user = await collection.findOne({ email: email });
+        if (!user) {
+            return res.status(404).json({ message: "Email not registered" });
+        }
+
+        // verify password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+
+        // return user without password
+        const { password: _, ...safeUser } = user;
+        return res.status(200).json(safeUser);
+    } catch (err) {
+        console.error("Login error:", err);
+        return res.status(500).json({ message: "Server error" });
+    }
+});
+
 
 export default router;
