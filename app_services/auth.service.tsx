@@ -44,7 +44,7 @@ export async function register(
         ...profileOverrides,
     };
 
-    const response = await fetch("http://localhost:5050/record", {
+    const response = await fetch("http://localhost:5050/record/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...user, password }),

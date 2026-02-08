@@ -135,9 +135,9 @@ const DashboardView: React.FC = () => {
 
             </div>
 
-            {/* Weekly Chart */}
+            {/* Daily Chart */}
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <h3 className="text-lg font-bold mb-6">Weekly Consumption</h3>
+                <h3 className="text-lg font-bold mb-6">Daily Consumption</h3>
                 <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={[{ day: 'Today', calories: totals.calories }, { day: 'Avg', calories: avgCalories || dailyTarget }]}>

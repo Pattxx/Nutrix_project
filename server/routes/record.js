@@ -63,7 +63,6 @@ router.get("/history/weekly", async(req, res) => {
                 timestamp: { $gte: sevenDaysAgo },
             })
             .toArray();
-
         // Group calories by day 
         const dailyStats = {};
         entries.forEach((entry) => {
@@ -107,7 +106,7 @@ router.put("/user/:email", async(req, res) => {
 });
 
 // registration. check if email exists, hash password, save user
-router.post("/", async(req, res) => {
+router.post("/register", async(req, res) => {
     try {
         const collection = db.collection("Users");
         const { email, password, ...userData } = req.body;
