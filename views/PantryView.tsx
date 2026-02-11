@@ -69,7 +69,9 @@ const PantryView: React.FC = () => {
                                 <div>
                                     <p className="font-bold">{res.name}</p>
                                     <p className="text-xs text-slate-400">
-                                        {res.calories} kcal � P:{res.protein}g � F:{res.fat}g � C:{res.carbs}g
+                                        {Math.round(res.calories)} kcal
+                                        <br />
+                                        P: {Math.round(res.protein)}g  F: {Math.round(res.fat)}g  C: {Math.round(res.carbs)}g
                                     </p>
                                 </div>
                                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition">

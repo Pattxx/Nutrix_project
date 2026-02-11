@@ -43,7 +43,7 @@ export function calculateDailyTarget(user: UserProfile): number {
             ? 10 * weight + 6.25 * height - 5 * age + 5
             : 10 * weight + 6.25 * height - 5 * age - 161;
 
-    return Math.round(bmr * ACTIVITY_LEVELS[activityLevel as keyof typeof ACTIVITY_LEVELS]?.factor || 1.2);
+    return Math.round(bmr * activityLevel);
 }
 export function calculateRecipeNutrition(
     recipe: {

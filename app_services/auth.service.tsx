@@ -40,7 +40,7 @@ export async function register(
         height: 175,
         gender: "male",
         goal: "maintain",
-        activityLevel: "light",
+        activityLevel: 1.2,
         ...profileOverrides,
     };
 

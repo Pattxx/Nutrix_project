@@ -1,10 +1,19 @@
 ﻿import React from "react";
 import { ChefHat, Flame, Utensils, PlusCircle, ChevronRight, Dna, Wheat, Droplet } from "lucide-react";
 import { useNutrix } from "../context/NutrixContext";
+import { UserProfile, FoodProduct, MealEntry, AppView, CalculatedRecipe } from "../types";
+import { saveMealLog } from "../app_services/history.service";
+import { calculateMeal } from "../app_services/nutrition.service";
 
 const RecipeGenView: React.FC = () => {
-    const { pantry, foodDatabase, currentRecipe, isGeneratingRecipe, setCurrentRecipe, setView, triggerRecipeGen, addMeal } = useNutrix();
-
+    const { pantry, foodDatabase, currentUser, currentRecipe, isGeneratingRecipe, setCurrentRecipe, setView, triggerRecipeGen, addMeal, setMealLogs } = useNutrix();
+    function normalize(str: string) {
+        return str
+            .normalize("NFD")                 
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim()
+            .toLowerCase();
+    }
     return (
         <div className="space-y-6 animate-in zoom-in duration-300">
 
@@ -123,18 +132,48 @@ const RecipeGenView: React.FC = () => {
 
                         {/* Actions */}
                         <button
-                            onClick={() => {
-                                currentRecipe.ingredients.forEach(ing => {
-                                    const food = foodDatabase.find(f => f.name.toLowerCase().includes(ing.name.toLowerCase()));
-                                    if (food) addMeal(food, ing.amountGrams);
-                                });
-                                alert("Recipe items added to your daily log!");
-                                setView('dashboardView');
+                            onClick={async () => {
+                                if (!currentRecipe) return;
+
+                                try {
+                                   
+                                    const recipeEntry: MealEntry = {
+                                        id: Math.random().toString(36).substr(2, 9),
+                                        productId: "ai-recipe-" + Date.now(), // just a unique ID
+                                        name: currentRecipe.name,
+                                        grams: 0, // optional, AI recipe is whole meal
+                                        calories: currentRecipe.totalCalories,
+                                        protein: currentRecipe.totalProtein,
+                                        fat: currentRecipe.totalFat,
+                                        carbs: currentRecipe.totalCarbs,
+                                        timestamp: Date.now(),
+                                        // optional: include full recipe JSON if you want
+                                        // recipeData: currentRecipe
+                                    };
+
+                                    // Optimistic UI update
+                                    setMealLogs(prev => [recipeEntry, ...prev]);
+
+                                 
+                                    await saveMealLog({
+                                        ...recipeEntry,
+                                        email: currentUser?.email || undefined,
+                                    });
+
+                                    alert("AI recipe added to your daily log!");
+                                    setView("dashboardView");
+
+                                } catch (err: any) {
+                                    console.error("Failed to log AI recipe:", err);
+                                    alert("Failed to log AI recipe. Please try again.");
+                                }
                             }}
                             className="w-full py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition"
                         >
                             Log this Recipe
                         </button>
+
+
                         <button
                             onClick={() => setCurrentRecipe(null)}
                             className="w-full py-4 bg-white text-slate-600 font-bold border border-slate-200 rounded-2xl hover:bg-slate-50 transition"

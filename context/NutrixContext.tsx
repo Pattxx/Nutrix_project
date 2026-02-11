@@ -4,7 +4,7 @@ import { INITIAL_FOOD_DATABASE,ACTIVITY_LEVELS } from "../constants";
 import { calculateDailyTarget, calculateDailyTotals, calculateRecipeNutrition } from "../utils";
 import { searchOpenFoodFacts } from "../app_services/foodApi";
 import { saveMealLog, fetchMealLogs } from "../app_services/history.service";
-import { generateRecipe } from "../app_services/geminiService";
+//import { generateRecipe } from "../app_services/geminiService";
 
 interface NutrixContextProps {
     view: AppView;
@@ -24,7 +24,7 @@ interface NutrixContextProps {
     totals: ReturnType<typeof calculateDailyTotals>;
     macroData: { name: string; value: number; color: string }[];
     
-
+    setMealLogs: React.Dispatch<React.SetStateAction<MealEntry[]>>;
     logout: () => void;
     addToPantry: (food: FoodProduct) => void;
     removeFromPantry: (name: string) => void;
@@ -33,6 +33,7 @@ interface NutrixContextProps {
     triggerRecipeGen: () => Promise<void>;
     setSearchQuery: (query: string) => void;
     calculateDailyTarget: (profile: UserProfile) => number;
+    setCurrentRecipe: React.Dispatch<React.SetStateAction<CalculatedRecipe | null>>;
 }
 
 const NutrixContext = createContext<NutrixContextProps>({} as any);
@@ -168,10 +169,33 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         if (pantry.length === 0) return;
         setIsGeneratingRecipe(true);
         try {
-            const recipe = await generateRecipe(pantry);
-            const calculated = calculateRecipeNutrition(recipe, foodDatabase);
+            const res = await fetch("/api/recipe/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ pantry }),
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                console.error("generateRecipe failed:", err);
+                alert(`Failed to generate recipe: ${err.error || err.message}`);
+                return;
+            }
+
+            const data = await res.json();
+
+            // Safety check
+            if (!data || !data.ingredients) {
+                console.error("Invalid recipe returned from backend", data);
+                alert("Recipe generation failed: invalid data received.");
+                return;
+            }
+
+            const calculated = calculateRecipeNutrition(data, foodDatabase);
             setCurrentRecipe(calculated);
-        } catch {
+
+        } catch (err) {
+            console.error("generateRecipe failed:", err);
             alert("Failed to generate recipe. Please try again.");
         } finally {
             setIsGeneratingRecipe(false);
@@ -195,8 +219,8 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     return (
         <NutrixContext.Provider value={{
-            view, setView, currentUser, setCurrentUser,pantry,activityLevels: ACTIVITY_LEVELS,
-            mealLogs, foodDatabase, currentRecipe,
+            view, setView, setCurrentRecipe, currentUser, setCurrentUser,pantry,activityLevels: ACTIVITY_LEVELS,
+            mealLogs, foodDatabase, currentRecipe, setMealLogs,
             isGeneratingRecipe, searchQuery, searchResults, isSearching, dailyTarget,
             totals, macroData, logout, addToPantry, removeFromPantry, addMeal,
             performSearch, triggerRecipeGen, setSearchQuery,calculateDailyTarget
