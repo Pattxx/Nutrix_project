@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
-import { Flame } from "lucide-react";
+import { Flame, Dna, Wheat, Droplet } from "lucide-react";
 import { useNutrix } from "../context/NutrixContext";
 import { fetchWeeklyStats } from "../app_services/history.service";
-import MacroBars from "./MacroBars";
+import MacroBars, { MacroData } from "./MacroBars";
+
 const DashboardView: React.FC = () => {
     const { currentUser, setView, dailyTarget, totals, macroData, mealLogs } = useNutrix();
     const [weeklyData, setWeeklyData] = useState<Array<{ date: string; calories: number }>>([]);
@@ -27,6 +28,32 @@ const DashboardView: React.FC = () => {
         };
         loadWeekly();
     }, [currentUser]);
+
+
+    const macroBarsData: MacroData[] = [
+        {
+            name: "Protein",
+            value: totals?.protein || 0,
+            target: currentUser?.dailyProteinTarget || 0,
+            color: "blue",
+            icon: <Dna className="w-5 h-5 text-blue-500" />,
+        },
+        {
+            name: "Carbs",
+            value: totals?.carbs || 0,
+            target: currentUser?.dailyCarbTarget || 0,
+            color: "amber",
+            icon: <Wheat className="w-5 h-5 text-amber-400" />,
+        },
+        {
+            name: "Fat",
+            value: totals?.fat || 0,
+            target: currentUser?.dailyFatTarget || 0,
+            color: "rose",
+            icon: <Droplet className="w-5 h-5 text-rose-400" />,
+        },
+    ];
+
 
 
 
@@ -85,8 +112,8 @@ const DashboardView: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Macro Bars */}
-                <MacroBars macroData={macroData} />
+                <MacroBars macroData={macroBarsData} />
+
 
 
 

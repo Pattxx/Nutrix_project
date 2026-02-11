@@ -8,6 +8,10 @@ export interface UserProfile {
   goal: 'lose' | 'maintain' | 'gain';
   activityLevel: 1.2 | 1.375 | 1.55 | 1.725 | 1.9;
   email?: string;
+  dietType?: 'balanced' | 'highProtein' | 'highCarb' | 'highFat';
+  dailyProteinTarget?: number; 
+  dailyCarbTarget?: number;    
+  dailyFatTarget?: number;
 }
 
 export interface FoodProduct {
@@ -41,7 +45,8 @@ export interface AIRecipe {
   name: string;
   ingredients: RecipeIngredient[];
   instructions: string[];
-  difficulty: 'Easy' | 'Medium' | 'Hard';
+    difficulty: 'Easy' | 'Medium' | 'Hard';
+    grams: number;
 }
 
 export interface CalculatedRecipe extends AIRecipe {

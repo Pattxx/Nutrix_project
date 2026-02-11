@@ -3,6 +3,7 @@ import { Flame } from "lucide-react";
 import { useNutrix } from "../context/NutrixContext";
 import { UserProfile } from "../types";
 import { updateUserProfile } from "../app_services/profile.service";
+import { calculateDailyTarget, calculateDailyMacros } from "../app_services/nutrition.service";
 
 const ProfileView: React.FC = () => {
     const { currentUser, setCurrentUser, setView, calculateDailyTarget, activityLevels } = useNutrix();
@@ -16,13 +17,22 @@ const ProfileView: React.FC = () => {
         setFormData({ ...formData, [field]: value });
     };
 
+    const dailyCalories = calculateDailyTarget(formData);
+    const dietType = formData.dietType || "balanced";
+    const { protein, carbs, fat } = calculateDailyMacros(dietType, dailyCalories);
+
     const handleSave = async () => {
         setError(null);
         setLoading(true);
         try {
+            // Store live macros in user profile on save
+            formData.dailyProteinTarget = protein;
+            formData.dailyCarbTarget = carbs;
+            formData.dailyFatTarget = fat;
+
             const updated = await updateUserProfile(currentUser.email, formData);
             setCurrentUser(updated);
-            setView('dashboardView');
+            setView("dashboardView");
         } catch (err) {
             console.error("Save profile failed:", err);
             setError(err instanceof Error ? err.message : "Failed to save profile");
@@ -30,6 +40,7 @@ const ProfileView: React.FC = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 animate-in slide-in-from-left-4 duration-500">
@@ -132,17 +143,39 @@ const ProfileView: React.FC = () => {
                         </div>
                     </div>
 
+
+                    {/* Diet Type Selector */}
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Diet Type
+                        </label>
+                        <select
+                            value={formData.dietType || "balanced"}
+                            onChange={(e) => handleChange("dietType", e.target.value)}
+                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+                        >
+                            <option value="balanced">Balanced</option>
+                            <option value="highProtein">High Protein</option>
+                            <option value="highCarb">High Carb</option>
+                            <option value="highFat">High Fat</option>
+                        </select>
+                        </div>
+                    <br/>
+
                     {/* Calculated Target */}
                     <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 flex items-center justify-between">
                         <div>
                             <p className="text-emerald-700 font-bold uppercase text-xs tracking-widest mb-1">
                                 Calculated Daily Limit
                             </p>
-                            <p className="text-3xl font-black text-emerald-800">{calculateDailyTarget(formData)} kcal</p>
+                            <p className="text-3xl font-black text-emerald-800">{dailyCalories} kcal</p>
+                            <p className="mt-1 text-sm text-slate-500">
+                                Protein: {protein}g, Carbs: {carbs}g, Fat: {fat}g
+                            </p>
                         </div>
                         <Flame className="w-12 h-12 text-emerald-600 opacity-20" />
                     </div>
-
+                        
                     <button
                         onClick={handleSave}
                         disabled={loading}

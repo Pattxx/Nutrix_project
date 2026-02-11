@@ -1,6 +1,30 @@
 import { FoodProduct, MealEntry, UserProfile } from "../types";
 import { ACTIVITY_LEVELS } from "../constants";
 
+const DIET_MACRO_PROFILES: Record<
+    string,
+    { protein: number; carbs: number; fat: number } 
+> = {
+    balanced: { protein: 30, carbs: 40, fat: 30 },
+    highProtein: { protein: 40, carbs: 30, fat: 30 },
+    highCarb: { protein: 25, carbs: 50, fat: 25 },
+    highFat: { protein: 25, carbs: 25, fat: 50 },
+};
+
+export function calculateDailyMacros(
+    dietType: string,
+    dailyCalories: number
+) {
+    const profile = DIET_MACRO_PROFILES[dietType] || DIET_MACRO_PROFILES.balanced;
+
+    return {
+        protein: Math.round((dailyCalories * (profile.protein / 100)) / 4), // 4 kcal/g
+        carbs: Math.round((dailyCalories * (profile.carbs / 100)) / 4),
+        fat: Math.round((dailyCalories * (profile.fat / 100)) / 9), // 9 kcal/g
+    };
+}
+
+
 export function calculateMeal(
     food: FoodProduct,
     grams: number

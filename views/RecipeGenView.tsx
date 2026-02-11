@@ -68,10 +68,14 @@ const RecipeGenView: React.FC = () => {
                                 {currentRecipe.difficulty} Difficulty
                             </span>
                             <h3 className="text-3xl font-bold mb-2">{currentRecipe.name}</h3>
+                            
                             <div className="flex gap-6 mt-6">
                                 <div className="flex items-center gap-2">
                                     <Flame size={18} />
                                     <span className="font-bold">{currentRecipe.totalCalories} kcal</span>
+                                    <br />
+                                    <span>{currentRecipe.grams} g</span>
+
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Utensils size={18} />
@@ -142,7 +146,7 @@ const RecipeGenView: React.FC = () => {
                                         id: Math.random().toString(36).substr(2, 9),
                                         productId: "ai-recipe-" + Date.now(),
                                         name: currentRecipe.name,
-                                        grams: 0,
+                                        grams: currentRecipe.grams,
                                         calories: currentRecipe.totalCalories,
                                         protein: currentRecipe.totalProtein,
                                         fat: currentRecipe.totalFat,

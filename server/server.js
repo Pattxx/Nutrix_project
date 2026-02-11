@@ -13,7 +13,7 @@ const __filename = fileURLToPath(
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, "config.env") });
 //check
-console.log("Gemini key loaded:", !!process.env.GEMINI_API_KEY);
+//console.log("Gemini key loaded:", !!process.env.GEMINI_API_KEY);
 
 const PORT = process.env.PORT || 5050;
 const app = express();

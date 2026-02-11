@@ -24,7 +24,8 @@ router.post("/generate", async (req, res) => {
                             text: `Create a recipe in JSON format with the following ingredients: ${pantry.join(", ")}.
                             Return strictly JSON matching this structure:
                             {
-                             "name": "Recipe name",
+                              "name": "Recipe name",
+                              "grams": number,
                               "ingredients": [{"name": "ingredient name", "amountGrams": number}],
                               "instructions": ["Step 1", "Step 2"],
                               "difficulty": "Easy" | "Medium" | "Hard",
@@ -73,7 +74,7 @@ router.post("/generate", async (req, res) => {
                 details: "Missing ingredients array"
             });
         }
-        console.log("Parsed recipe from Gemini:", recipe);
+        //console.log("Parsed recipe from Gemini:", recipe);
 
         res.json(recipe);
 
