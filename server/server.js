@@ -7,6 +7,22 @@ import path from "path";
 import { fileURLToPath } from 'url';
 import recipeRoutes from "./routes/recipe.js";
 
+const allowedOrigins = [
+  "http://localhost:3000",            
+  process.env.FRONTEND_URL            
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
 // Initialize env vars 
 const __filename = fileURLToPath(
     import.meta.url);
@@ -18,8 +34,8 @@ dotenv.config({ path: path.join(__dirname, "config.env") });
 const PORT = process.env.PORT || 5050;
 const app = express();
 
-// Import routes and middleware
-app.use(cors());
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/record", records);
 app.use("/api/recipe", recipeRoutes);
