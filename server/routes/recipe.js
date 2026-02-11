@@ -42,7 +42,7 @@ router.post("/generate", async (req, res) => {
                 }
             ]
         });
-console.log("Raw recipeText from Gemini:", recipeText);
+//console.log("Raw recipeText from Gemini:", recipeText);
    
         let recipeText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
