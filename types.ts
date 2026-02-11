@@ -16,11 +16,12 @@ export interface UserProfile {
 
 export interface FoodProduct {
   id: string;
-  name: string;
-  calories: number; // per 100g
-  protein: number; // per 100g
-  fat: number; // per 100g
-  carbs: number; // per 100g
+    name: string;
+  //all per 100g
+  calories: number; 
+  protein: number; 
+  fat: number; 
+  carbs: number; 
   source: 'local' | 'openfoodfacts';
 }
 

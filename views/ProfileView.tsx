@@ -130,16 +130,16 @@ const ProfileView: React.FC = () => {
                         <div className="md:col-span-2">
                             <label className="block text-sm font-medium text-slate-700 mb-2">Activity Level</label>
                             <select
-                                value={formData.activityLevel || 'light'}
-                                onChange={(e) => handleChange('activityLevel', e.target.value)}
-                                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+                                value={formData.activityLevel || 1.2}
+                                onChange={(e) => handleChange('activityLevel', parseFloat(e.target.value))}
                             >
-                                <option value="sedentary">Sedentary (little or no exercise)</option>
-                                <option value="light">Light (exercise 1-3 days/week)</option>
-                                <option value="moderate">Moderate (exercise 3-5 days/week)</option>
-                                <option value="active">Active (exercise 6-7 days/week)</option>
-                                <option value="veryActive">Very Active (intense exercise daily)</option>
+                                <option value={1.2}>Sedentary (little or no exercise)</option>
+                                <option value={1.375}>Light (exercise 1-3 days/week)</option>
+                                <option value={1.55}>Moderate (exercise 3-5 days/week)</option>
+                                <option value={1.725}>Active (exercise 6-7 days/week)</option>
+                                <option value={1.9}>Very Active (intense exercise daily)</option>
                             </select>
+
                         </div>
                     </div>
 
