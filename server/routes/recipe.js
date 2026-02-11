@@ -1,11 +1,11 @@
 import express from "express";
 import { GoogleGenAI } from '@google/genai';
-import { API_BASE_URL } from '../src';
+
 const router = express.Router();
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 //deleted the raw fetch, now using google genai sdk
 
-router.post(`${API_BASE_URL}/api/recipe/generate`, async (req, res) => {
+router.post("/generate", async (req, res) => {
     const { pantry } = req.body;
 
     if (!GEMINI_API_KEY) {

@@ -169,7 +169,7 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         if (pantry.length === 0) return;
         setIsGeneratingRecipe(true);
         try {
-            const res = await fetch("/api/recipe/generate", {
+            const res = await fetch("https://nutrix-project.onrender.com/api/recipe/generate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ pantry }),
