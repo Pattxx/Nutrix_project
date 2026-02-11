@@ -1,12 +1,12 @@
 import { UserProfile } from "../types";
-
+import { API_BASE_URL } from '../src';
 
 const USER_KEY = "nutrix_user";
 
 //logging in 
 export async function login(email: string, password: string): Promise<UserProfile | null> {
     try {
-        const response = await fetch("http://localhost:5050/record/login", {
+        const response = await fetch(`${API_BASE_URL}/record/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
@@ -44,7 +44,7 @@ export async function register(
         ...profileOverrides,
     };
 
-    const response = await fetch("http://localhost:5050/record/register", {
+    const response = await fetch(`${API_BASE_URL}/record/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...user, password }),

@@ -1,5 +1,6 @@
+import { API_BASE_URL } from '../src';
 export async function saveMealLog(entry: any) {
-    const res = await fetch("http://localhost:5050/record/history", {
+    const res = await fetch(`${API_BASE_URL}/record/history`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(entry),
@@ -12,7 +13,7 @@ export async function saveMealLog(entry: any) {
 }
 
 export async function fetchMealLogs(email?: string) {
-    const url = new URL("http://localhost:5050/record/history");
+    const url = new URL(`${API_BASE_URL}/record/history`);
     if (email) url.searchParams.set("email", email);
     const res = await fetch(url.toString());
     if (!res.ok) {
@@ -24,7 +25,7 @@ export async function fetchMealLogs(email?: string) {
 }
 
 export async function fetchWeeklyStats(email: string) {
-    const url = new URL("http://localhost:5050/record/history/weekly");
+    const url = new URL(`${API_BASE_URL}/record/history/weekly`);
     url.searchParams.set("email", email);
     const res = await fetch(url.toString());
     if (!res.ok) {
