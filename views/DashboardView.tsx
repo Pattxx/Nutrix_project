@@ -3,7 +3,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, 
 import { Flame } from "lucide-react";
 import { useNutrix } from "../context/NutrixContext";
 import { fetchWeeklyStats } from "../app_services/history.service";
-
+import MacroBars from "./MacroBars";
 const DashboardView: React.FC = () => {
     const { currentUser, setView, dailyTarget, totals, macroData, mealLogs } = useNutrix();
     const [weeklyData, setWeeklyData] = useState<Array<{ date: string; calories: number }>>([]);
@@ -27,6 +27,8 @@ const DashboardView: React.FC = () => {
         };
         loadWeekly();
     }, [currentUser]);
+
+
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -66,7 +68,8 @@ const DashboardView: React.FC = () => {
                                     paddingAngle={5}
                                     dataKey="value"
                                 >
-                                    <Cell fill="#10b981" />
+    
+                                    <Cell fill={totals.calories > dailyTarget ? '#ef4444' : '#10b981'} />
                                     <Cell fill="#f1f5f9" />
                                 </Pie>
                             </PieChart>
@@ -83,21 +86,9 @@ const DashboardView: React.FC = () => {
                 </div>
 
                 {/* Macro Bars */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                    <h3 className="text-slate-500 text-sm font-medium mb-4">Macronutrients (g)</h3>
-                    <div className="flex justify-around items-end h-32">
-                        {macroData.map(m => (
-                            <div key={m.name} className="flex flex-col items-center gap-2">
-                                <div
-                                    className="w-8 rounded-t-lg transition-all duration-700"
-                                    style={{ height: `${Math.min(100, (m.value / 1.5))}%`, backgroundColor: m.color }}
-                                />
-                                <span className="text-xs font-bold">{m.value}g</span>
-                                <span className="text-[10px] text-slate-400 uppercase tracking-tighter">{m.name}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                <MacroBars macroData={macroData} />
+
+
 
                 {/*Log*/}
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
@@ -140,19 +131,35 @@ const DashboardView: React.FC = () => {
                 <h3 className="text-lg font-bold mb-6">Daily Consumption</h3>
                 <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={[{ day: 'Today', calories: totals.calories }, { day: 'Avg', calories: avgCalories || dailyTarget }]}>
+                        <BarChart
+                            data={[
+                                { day: 'Today', calories: totals.calories },
+                                { day: 'Avg', calories: avgCalories || dailyTarget }
+                            ]}
+                        >
                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                             <XAxis dataKey="day" axisLine={false} tickLine={false} />
-                            <YAxis axisLine={false} tickLine={false} domain={[0, dailyTarget]} />
-                            <Tooltip 
+                            <YAxis axisLine={false} tickLine={false} domain={[0, Math.max(dailyTarget, totals.calories * 1.1)]} />
+                            <Tooltip
                                 cursor={{ fill: '#f8fafc' }}
                                 formatter={(value: any) => `calories: ${value}`}
                                 labelFormatter={() => ''}
                                 contentStyle={{ border: 'none', borderRadius: '6px' }}
                             />
-                            <Bar dataKey="calories" fill="#10b981" radius={[4, 4, 0, 0]} barSize={60} />
+                            <Bar dataKey="calories" radius={[4, 4, 0, 0]} barSize={60}>
+                                {[
+                                    { day: 'Today', calories: totals.calories },
+                                    { day: 'Avg', calories: avgCalories || dailyTarget }
+                                ].map((entry, index) => (
+                                    <Cell
+                                        key={index}
+                                        fill={entry.calories > dailyTarget ? '#ef4444' : '#10b981'}
+                                    />
+                                ))}
+                            </Bar>
                         </BarChart>
                     </ResponsiveContainer>
+
                 </div>
             </div>
 

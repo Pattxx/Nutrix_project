@@ -192,7 +192,27 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             }
 
             const calculated = calculateRecipeNutrition(data, foodDatabase);
-            setCurrentRecipe(calculated);
+
+            setCurrentRecipe({
+                ...data,
+                totalCalories:
+                    calculated.totalCalories > 0
+                        ? calculated.totalCalories
+                        : data.totalCalories,
+                totalProtein:
+                    calculated.totalProtein > 0
+                        ? calculated.totalProtein
+                        : data.totalProtein,
+                totalFat:
+                    calculated.totalFat > 0
+                        ? calculated.totalFat
+                        : data.totalFat,
+                totalCarbs:
+                    calculated.totalCarbs > 0
+                        ? calculated.totalCarbs
+                        : data.totalCarbs,
+            });
+
 
         } catch (err) {
             console.error("generateRecipe failed:", err);

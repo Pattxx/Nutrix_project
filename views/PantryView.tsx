@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, ChefHat, Trash2, PlusCircle } from "lucide-react";
 import { useNutrix } from "../context/NutrixContext";
 import { FoodProduct } from "../types";
@@ -9,6 +9,26 @@ const PantryView: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<FoodProduct[]>([]);
     const [isSearching, setIsSearching] = useState(false);
+    const [searchingText, setSearchingText] = useState("Searching.");
+
+    useEffect(() => {
+        if (!isSearching) {
+            setSearchingText("Searching.");
+            return;
+        }
+
+        const states = ["Searching.", "Searching..", "Searching..."];
+        let index = 0;
+
+        const interval = setInterval(() => {
+            index = (index + 1) % states.length;
+            setSearchingText(states[index]);
+        }, 400);
+
+        return () => clearInterval(interval);
+    }, [isSearching]);
+
+
 
     const performSearch = async () => {
         if (!searchQuery) return;
@@ -41,6 +61,7 @@ const PantryView: React.FC = () => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && performSearch()}
+                        disabled={isSearching}
                     />
                 </div>
                 <button
@@ -48,7 +69,7 @@ const PantryView: React.FC = () => {
                     className="px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition"
                     disabled={isSearching}
                 >
-                    {isSearching ? '...' : 'Search'}
+                    {isSearching ? searchingText : 'Search'}
                 </button>
             </div>
 

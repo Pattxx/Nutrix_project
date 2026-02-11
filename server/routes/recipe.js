@@ -73,6 +73,7 @@ router.post("/generate", async (req, res) => {
                 details: "Missing ingredients array"
             });
         }
+        console.log("Parsed recipe from Gemini:", recipe);
 
         res.json(recipe);
 

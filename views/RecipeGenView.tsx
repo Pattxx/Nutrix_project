@@ -7,6 +7,7 @@ import { calculateMeal } from "../app_services/nutrition.service";
 
 const RecipeGenView: React.FC = () => {
     const { pantry, foodDatabase, currentUser, currentRecipe, isGeneratingRecipe, setCurrentRecipe, setView, triggerRecipeGen, addMeal, setMealLogs } = useNutrix();
+   // console.log("Recipe in view:", currentRecipe);
     function normalize(str: string) {
         return str
             .normalize("NFD")                 
@@ -90,7 +91,7 @@ const RecipeGenView: React.FC = () => {
                                     {currentRecipe.ingredients.map((ing, i) => (
                                         <li key={i} className="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
                                             <span className="font-medium">{ing.name}</span>
-                                            <span className="text-slate-500 font-bold">{ing.amountGrams}g</span>
+                                            {/*<span className="text-slate-500 font-bold">{ing.amountGrams}g</span>*/}
                                         </li>
                                     ))}
                                 </ul>
@@ -122,11 +123,11 @@ const RecipeGenView: React.FC = () => {
                             <h4 className="text-lg font-bold mb-6">Nutritional Breakdown</h4>
                             <div className="space-y-6">
                                 {/* Protein */}
-                                <NutrientBar icon={<Dna />} label="Protein" value={currentRecipe.totalProtein} color="blue" widthPercent={40} />
+                                <NutrientBar icon={<Dna />} label="Protein" value={currentRecipe.totalProtein} color="blue" widthPercent={100} />
                                 {/* Carbs */}
-                                <NutrientBar icon={<Wheat />} label="Carbs" value={currentRecipe.totalCarbs} color="amber" widthPercent={35} />
+                                <NutrientBar icon={<Wheat />} label="Carbs" value={currentRecipe.totalCarbs} color="amber" widthPercent={100} />
                                 {/* Fat */}
-                                <NutrientBar icon={<Droplet />} label="Fat" value={currentRecipe.totalFat} color="rose" widthPercent={25} />
+                                <NutrientBar icon={<Droplet />} label="Fat" value={currentRecipe.totalFat} color="rose" widthPercent={100} />
                             </div>
                         </div>
 
@@ -139,16 +140,15 @@ const RecipeGenView: React.FC = () => {
                                    
                                     const recipeEntry: MealEntry = {
                                         id: Math.random().toString(36).substr(2, 9),
-                                        productId: "ai-recipe-" + Date.now(), // just a unique ID
+                                        productId: "ai-recipe-" + Date.now(),
                                         name: currentRecipe.name,
-                                        grams: 0, // optional, AI recipe is whole meal
+                                        grams: 0,
                                         calories: currentRecipe.totalCalories,
                                         protein: currentRecipe.totalProtein,
                                         fat: currentRecipe.totalFat,
                                         carbs: currentRecipe.totalCarbs,
                                         timestamp: Date.now(),
-                                        // optional: include full recipe JSON if you want
-                                        // recipeData: currentRecipe
+                                       
                                     };
 
                                     // Optimistic UI update
