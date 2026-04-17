@@ -11,7 +11,7 @@ Calorie & macronutrient tracking - monitor nutritional values of meals and produ
 Food management - add, edit, and remove products easily.
 Responsive UI - clean and user-friendly interface.
 <br><br>
-Live Demo: https://nutrix-project.vercel.app/
+Live Demo: https://nutrix-project.vercel.app/ // DEMO IS TURNED AS OF 10.04.2026
 <br><br>
 Tech Stack <br>
 The project is built using:<br>
