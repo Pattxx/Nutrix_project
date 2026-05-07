@@ -4,6 +4,8 @@ import axios from "axios";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import foodRoutes from "./routes/food.js";
+
 
 const __filename = fileURLToPath(
     import.meta.url);
@@ -21,12 +23,19 @@ const PROFILE_SERVICE = process.env.PROFILE_SERVICE_URL || "http://localhost:505
 
 const allowedOrigins = [
     "http://localhost:3000",
+    "http://localhost:5173",
     process.env.FRONTEND_URL
-].filter(Boolean);
+]
+    .filter(Boolean)
+    .map(o => o.replace(/\/$/, "")); // usuwa trailing slash
 
 const corsOptions = {
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin) return callback(null, true);
+
+        const normalizedOrigin = origin.replace(/\/$/, "");
+
+        if (allowedOrigins.includes(normalizedOrigin)) {
             callback(null, true);
         } else {
             callback(new Error("Not allowed by CORS"));

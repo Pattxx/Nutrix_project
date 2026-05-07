@@ -4,6 +4,7 @@ import { INITIAL_FOOD_DATABASE,ACTIVITY_LEVELS } from "../constants";
 import { calculateDailyTarget, calculateDailyTotals, calculateRecipeNutrition } from "../utils";
 import { searchOpenFoodFacts } from "../app_services/foodApi";
 import { saveMealLog, fetchMealLogs } from "../app_services/history.service";
+import { API_BASE_URL } from "../src.js";
 //import { generateRecipe } from "../app_services/geminiService";
 
 interface NutrixContextProps {
@@ -68,13 +69,13 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     useEffect(() => {
         const loadRemote = async () => {
             if (!currentUser || !currentUser.email) {
-                console.log('Skipping remote load: no currentUser or email', { currentUser });
+               // console.log('Skipping remote load: no currentUser or email', { currentUser });
                 return;
             }
-            console.log('Loading remote history for:', currentUser.email);
+            //console.log('Loading remote history for:', currentUser.email);
             try {
                 const remote = await fetchMealLogs(currentUser.email);
-                console.log('Remote history response:', remote);
+                //console.log('Remote history response:', remote);
                 if (remote && Array.isArray(remote)) {
                     const mapped = remote.map((r: any) => ({
                         id: r._id?.toString() || r.id,
@@ -87,11 +88,11 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                         carbs: r.carbs,
                         timestamp: r.timestamp,
                     }));
-                    console.log('Setting mealLogs with', mapped.length, 'entries');
+                    //console.log('Setting mealLogs with', mapped.length, 'entries');
                     setMealLogs(mapped);
                 }
             } catch (err) {
-                console.error('Failed to load remote history:', err);
+               // console.error('Failed to load remote history:', err);
             }
         };
         loadRemote();
@@ -169,7 +170,7 @@ export const NutrixProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         if (pantry.length === 0) return;
         setIsGeneratingRecipe(true);
         try {
-            const res = await fetch("https://nutrix-project.onrender.com/api/recipe/generate", {
+            const res = await fetch(`${API_BASE_URL}/api/recipe/generate`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ pantry }),

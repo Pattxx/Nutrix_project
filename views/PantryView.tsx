@@ -49,8 +49,6 @@ const PantryView: React.FC = () => {
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
             <h2 className="text-3xl font-bold">My Pantry</h2>
             <p className="text-slate-500">Search for ingredients and add them to your daily log or pantry.</p>
-
-            {/* Search Bar */}
             <div className="flex gap-2">
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-3 text-slate-400" size={20} />
