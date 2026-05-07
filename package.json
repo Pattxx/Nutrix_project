@@ -6,10 +6,17 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "gateway": "node server/gateway/gateway.js",
+        "auth-service": "node server/services/auth/server.js",
+        "history-service": "node server/services/history/server.js",
+        "recipe-service": "node server/services/recipe/server.js",
+        "profile-service": "node server/services/profile/server.js",
+        "services:start": "concurrently \"npm run gateway\" \"npm run auth-service\" \"npm run history-service\" \"npm run recipe-service\" \"npm run profile-service\""
     },
     "dependencies": {
         "@google/genai": "^1.40.0",
+        "axios": "^1.7.7",
         "bcrypt": "^5.1.1",
         "cors": "^2.8.6",
         "dotenv": "^17.2.4",
@@ -27,6 +34,7 @@
         "@types/react": "^19.2.14",
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^5.0.0",
+        "concurrently": "^9.0.0",
         "typescript": "~5.8.2",
         "vite": "^6.2.0"
     }
