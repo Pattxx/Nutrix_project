@@ -57,7 +57,7 @@ const PantryView: React.FC = () => {
                     <input
                         type="text"
                         placeholder="Search products..."
-                        className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition"
+                        className="w-full pl-10 pr-4 py-3 border border-slate-200 focus:ring-2 focus:ring-emerald-500 outline-none transition"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && performSearch()}
@@ -66,7 +66,7 @@ const PantryView: React.FC = () => {
                 </div>
                 <button
                     onClick={performSearch}
-                    className="px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition"
+                    className="px-6 py-3 bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition"
                     disabled={isSearching}
                 >
                     {isSearching ? searchingText : 'Search'}
@@ -75,8 +75,7 @@ const PantryView: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                {/* Search Results */}
-                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm h-fit">
+                <div className="bg-white p-6  border border-slate-100 shadow-sm h-fit">
                     <h3 className="text-lg font-bold mb-4">Results</h3>
                     <div className="space-y-3">
                         {searchResults.length === 0 && !isSearching && (
@@ -86,7 +85,7 @@ const PantryView: React.FC = () => {
                             </div>
                         )}
                         {searchResults.map((res) => (
-                            <div key={res.id} className="p-3 border border-slate-100 rounded-xl hover:bg-slate-50 flex justify-between items-center group transition">
+                            <div key={res.id} className="p-3 border border-slate-100 hover:bg-slate-50 flex justify-between items-center group transition">
                                 <div>
                                     <p className="font-bold">{res.name}</p>
                                     <p className="text-xs text-slate-400">
@@ -96,13 +95,13 @@ const PantryView: React.FC = () => {
                                     </p>
                                 </div>
                                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition">
-                                    <button onClick={() => addToPantry(res)} className="p-2 text-emerald-600 bg-emerald-50 rounded-lg hover:bg-emerald-100">
+                                    <button onClick={() => addToPantry(res)} className="p-2 text-emerald-600 bg-emerald-50 hover:bg-emerald-100">
                                         <ChefHat size={18} />
                                     </button>
                                     <button onClick={() => {
                                         const g = prompt("How many grams?", "100");
                                         if (g) addMeal(res, parseInt(g));
-                                    }} className="p-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100">
+                                    }} className="p-2 text-blue-600 bg-blue-50 hover:bg-blue-100">
                                         <PlusCircle size={18} />
                                     </button>
                                 </div>
@@ -111,8 +110,8 @@ const PantryView: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Current Pantry Items */}
-                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+   
+                <div className="bg-white p-6 border border-slate-100 shadow-sm">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="text-lg font-bold">Ingredients I Have</h3>
                         <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded-full">{pantry.length} Items</span>
@@ -133,7 +132,7 @@ const PantryView: React.FC = () => {
                     {pantry.length > 0 && (
                         <button
                             onClick={() => setView('recipeGenView')}
-                            className="mt-8 w-full py-3 bg-emerald-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-700 transition shadow-lg shadow-emerald-200"
+                            className="mt-8 w-full py-3 bg-emerald-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-emerald-700 transition shadow-lg shadow-emerald-200"
                         >
                             <ChefHat size={20} />
                             Generate Recipes

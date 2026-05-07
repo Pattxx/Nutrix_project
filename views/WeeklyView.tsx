@@ -52,7 +52,7 @@ const WeeklyView: React.FC = () => {
             <p className="text-slate-500">Last 7 days of calorie intake tracking.</p>
 
             {error && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                <div className="p-4 bg-red-50 border border-red-200 text-red-700">
                     {error}
                 </div>
             )}
@@ -63,27 +63,26 @@ const WeeklyView: React.FC = () => {
                 <div className="text-center py-12 text-slate-400">No consumption data yet. Add meals to see weekly stats.</div>
             ) : (
                 <>
-                    {/* Stats Cards */}
+            
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <div className="bg-white p-6 border border-slate-100 shadow-sm">
                             <p className="text-slate-500 font-bold uppercase text-xs tracking-widest mb-2">Total Week</p>
                             <p className="text-3xl font-black text-emerald-600">{totalWeekly.toLocaleString()}</p>
                             <p className="text-xs text-slate-400 mt-1">kcal</p>
                         </div>
-                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <div className="bg-white p-6 border border-slate-100 shadow-sm">
                             <p className="text-slate-500 font-bold uppercase text-xs tracking-widest mb-2">Daily Average</p>
                             <p className="text-3xl font-black text-blue-600">{avgDaily.toLocaleString()}</p>
                             <p className="text-xs text-slate-400 mt-1">kcal/day</p>
                         </div>
-                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <div className="bg-white p-6 border border-slate-100 shadow-sm">
                             <p className="text-slate-500 font-bold uppercase text-xs tracking-widest mb-2">Daily Target</p>
                             <p className="text-3xl font-black text-purple-600">{dailyTarget.toLocaleString()}</p>
                             <p className="text-xs text-slate-400 mt-1">kcal/day</p>
                         </div>
                     </div>
 
-                    {/* Weekly Chart */}
-                    <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
+                    <div className="bg-white p-8  border border-slate-100 shadow-sm">
                         <h3 className="text-lg font-bold mb-6">Daily Calorie Intake</h3>
                         <ResponsiveContainer width="100%" height={350}>
                             <BarChart data={chartData}>
@@ -106,8 +105,7 @@ const WeeklyView: React.FC = () => {
                         </ResponsiveContainer>
                     </div>
 
-                    {/* Daily Breakdown Table */}
-                    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="bg-slate-50 border-b border-slate-100">

@@ -22,7 +22,7 @@ const colorMap: Record<string, string> = {
 
 const MacroBars: React.FC<MacroBarsProps> = ({ macroData }) => {
     return (
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm w-full max-w-sm">
+        <div className="bg-white p-6  border border-slate-100 shadow-sm w-full max-w-sm">
             <h4 className="text-lg font-bold mb-6">Nutritional Breakdown</h4>
             <div className="space-y-4">
                 {macroData.map((m) => {
@@ -32,7 +32,7 @@ const MacroBars: React.FC<MacroBarsProps> = ({ macroData }) => {
                     return (
                         <div key={m.name} className="flex items-center gap-4">
                            
-                            <div className="p-2 bg-slate-100 rounded-lg w-10 h-10 flex items-center justify-center">
+                            <div className="p-2 bg-slate-100 w-10 h-10 flex items-center justify-center">
                                 {m.icon}
                             </div>
 

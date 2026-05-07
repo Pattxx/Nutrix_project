@@ -13,7 +13,7 @@ dotenv.config({ path: path.join(__dirname, "../config.env") });
 const PORT = process.env.PORT || 5050;
 const app = express();
 
-// Service URLs
+// all Service URLs
 const AUTH_SERVICE = process.env.AUTH_SERVICE_URL || "http://localhost:5051";
 const HISTORY_SERVICE = process.env.HISTORY_SERVICE_URL || "http://localhost:5052";
 const RECIPE_SERVICE = process.env.RECIPE_SERVICE_URL || "http://localhost:5053";
@@ -38,7 +38,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Error handler for service calls
 const forwardRequest = async(req, res, serviceUrl, path) => {
     try {
         const method = req.method.toLowerCase();
@@ -66,7 +65,7 @@ const forwardRequest = async(req, res, serviceUrl, path) => {
     }
 };
 
-// Auth Service Routes
+// Auth Service
 app.post("/record/login", (req, res) => {
     forwardRequest(req, res, AUTH_SERVICE, "/login");
 });
@@ -75,7 +74,7 @@ app.post("/record/register", (req, res) => {
     forwardRequest(req, res, AUTH_SERVICE, "/register");
 });
 
-// History Service Routes
+// History Service
 app.post("/record/history", (req, res) => {
     forwardRequest(req, res, HISTORY_SERVICE, "/");
 });
@@ -88,17 +87,16 @@ app.get("/record/history/weekly", (req, res) => {
     forwardRequest(req, res, HISTORY_SERVICE, "/weekly");
 });
 
-// Profile Service Routes
+// Profile Service 
 app.put("/record/user/:email", (req, res) => {
     forwardRequest(req, res, PROFILE_SERVICE, `/${req.params.email}`);
 });
 
-// Recipe Service Routes
+// Recipe Service
 app.post("/api/recipe/generate", (req, res) => {
     forwardRequest(req, res, RECIPE_SERVICE, "/generate");
 });
 
-// Health check
 app.get("/health", (req, res) => {
     res.json({ status: "API Gateway is running" });
 });

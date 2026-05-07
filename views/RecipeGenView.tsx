@@ -18,7 +18,7 @@ const RecipeGenView: React.FC = () => {
     return (
         <div className="space-y-6 animate-in zoom-in duration-300">
 
-            {/* Header */}
+         
             <div className="flex items-center justify-between">
                 <h2 className="text-3xl font-bold">AI Chef</h2>
                 <button
@@ -29,9 +29,9 @@ const RecipeGenView: React.FC = () => {
                 </button>
             </div>
 
-            {/* Ready to cook */}
+    
             {!currentRecipe && !isGeneratingRecipe && (
-                <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center shadow-sm">
+                <div className="bg-white p-12 border border-slate-100 text-center shadow-sm">
                     <ChefHat className="w-20 h-20 text-emerald-600 mx-auto mb-6 opacity-40" />
                     <h3 className="text-2xl font-bold mb-2">Ready to cook?</h3>
                     <p className="text-slate-500 mb-8 max-w-md mx-auto">
@@ -39,16 +39,16 @@ const RecipeGenView: React.FC = () => {
                     </p>
                     <button
                         onClick={triggerRecipeGen}
-                        className="px-10 py-4 bg-emerald-600 text-white text-lg font-bold rounded-2xl hover:bg-emerald-700 transition shadow-xl shadow-emerald-200"
+                        className="px-10 py-4 bg-emerald-600 text-white text-lg font-bold hover:bg-emerald-700 transition shadow-xl shadow-emerald-200"
                     >
                         Get Cooking Suggestions
                     </button>
                 </div>
             )}
 
-            {/* Generating */}
+      
             {isGeneratingRecipe && (
-                <div className="bg-white p-12 rounded-3xl border border-slate-100 text-center shadow-sm">
+                <div className="bg-white p-12 border border-slate-100 text-center shadow-sm">
                     <div className="animate-bounce flex justify-center mb-6">
                         <div className="w-16 h-16 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
                     </div>
@@ -57,12 +57,12 @@ const RecipeGenView: React.FC = () => {
                 </div>
             )}
 
-            {/* Generated recipe */}
+       
             {currentRecipe && !isGeneratingRecipe && (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                    {/* Recipe Details */}
-                    <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+         
+                    <div className="lg:col-span-2 bg-white border border-slate-100 shadow-sm overflow-hidden">
                         <div className="p-8 bg-emerald-600 text-white">
                             <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
                                 {currentRecipe.difficulty} Difficulty
@@ -85,7 +85,7 @@ const RecipeGenView: React.FC = () => {
                         </div>
 
                         <div className="p-8 space-y-8">
-                            {/* Ingredients */}
+    
                             <div>
                                 <h4 className="text-xl font-bold mb-4 flex items-center gap-2">
                                     <PlusCircle className="text-emerald-600" size={20} />
@@ -93,7 +93,7 @@ const RecipeGenView: React.FC = () => {
                                 </h4>
                                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {currentRecipe.ingredients.map((ing, i) => (
-                                        <li key={i} className="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                                        <li key={i} className="flex justify-between items-center bg-slate-50 p-3">
                                             <span className="font-medium">{ing.name}</span>
                                             {/*<span className="text-slate-500 font-bold">{ing.amountGrams}g</span>*/}
                                         </li>
@@ -101,7 +101,7 @@ const RecipeGenView: React.FC = () => {
                                 </ul>
                             </div>
 
-                            {/* Instructions */}
+                     
                             <div>
                                 <h4 className="text-xl font-bold mb-4 flex items-center gap-2">
                                     <ChevronRight className="text-emerald-600" size={20} />
@@ -121,7 +121,7 @@ const RecipeGenView: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Nutrition Sidebar */}
+                 
                     <div className="space-y-6">
                         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
                             <h4 className="text-lg font-bold mb-6">Nutritional Breakdown</h4>
@@ -135,7 +135,7 @@ const RecipeGenView: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Actions */}
+                   
                         <button
                             onClick={async () => {
                                 if (!currentRecipe) return;
@@ -172,7 +172,7 @@ const RecipeGenView: React.FC = () => {
                                     alert("Failed to log AI recipe. Please try again.");
                                 }
                             }}
-                            className="w-full py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition"
+                            className="w-full py-4 bg-emerald-600 text-white font-bold shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition"
                         >
                             Log this Recipe
                         </button>
@@ -180,7 +180,7 @@ const RecipeGenView: React.FC = () => {
 
                         <button
                             onClick={() => setCurrentRecipe(null)}
-                            className="w-full py-4 bg-white text-slate-600 font-bold border border-slate-200 rounded-2xl hover:bg-slate-50 transition"
+                            className="w-full py-4 bg-white text-slate-600 font-bold border border-slate-200  hover:bg-slate-50 transition"
                         >
                             Try another combination
                         </button>
@@ -193,7 +193,7 @@ const RecipeGenView: React.FC = () => {
 
 const NutrientBar: React.FC<{ icon: React.ReactNode; label: string; value: number; color: string; widthPercent: number }> = ({ icon, label, value, color, widthPercent }) => (
     <div className="flex items-center gap-4">
-        <div className={`w-12 h-12 bg-${color}-50 text-${color}-600 rounded-xl flex items-center justify-center`}>
+        <div className={`w-12 h-12 bg-${color}-50 text-${color}-600 flex items-center justify-center`}>
             {icon}
         </div>
         <div className="flex-1">

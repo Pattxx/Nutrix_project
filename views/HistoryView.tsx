@@ -7,7 +7,7 @@ const HistoryView: React.FC = () => {
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
             <h2 className="text-3xl font-bold">Consumption History</h2>
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="bg-white border border-slate-100 shadow-sm overflow-hidden">
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-slate-50 border-b border-slate-100">

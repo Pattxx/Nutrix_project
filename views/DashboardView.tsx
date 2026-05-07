@@ -59,15 +59,13 @@ const DashboardView: React.FC = () => {
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-
-            {/* Welcome & Goal */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-3xl font-bold">Welcome back, {currentUser?.name}!</h2>
                     <p className="text-slate-500">Here's your progress for today.</p>
                 </div>
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center gap-3">
-                    <div className="p-2 bg-emerald-100 rounded-lg">
+                <div className="bg-white p-4 shadow-sm border border-slate-100 flex items-center gap-3">
+                    <div className="p-2 bg-emerald-100">
                         <Flame className="text-emerald-600" />
                     </div>
                     <div>
@@ -76,12 +74,8 @@ const DashboardView: React.FC = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                {/* Calories Pie */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                <div className="bg-white p-6 shadow-sm border border-slate-100 flex items-center gap-4">
                     <div className="relative w-24 h-24">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
@@ -115,10 +109,7 @@ const DashboardView: React.FC = () => {
                 <MacroBars macroData={macroBarsData} />
 
 
-
-
-                {/*Log*/}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <div className="bg-white p-6 shadow-sm border border-slate-100">
                     <h3 className="text-slate-500 text-sm font-medium mb-2">Today's Log</h3>
                     <div className="space-y-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                         {mealLogs.filter(log => {
@@ -145,7 +136,7 @@ const DashboardView: React.FC = () => {
                     </div>
                     <button
                         onClick={() => setView('pantryView')}
-                        className="mt-4 w-full py-2 bg-emerald-50 text-emerald-600 rounded-lg text-sm font-semibold hover:bg-emerald-100 transition"
+                        className="mt-4 w-full py-2 bg-emerald-50 text-emerald-600 text-sm font-semibold hover:bg-emerald-100 transition"
                     >
                         Add Entry
                     </button>
@@ -153,8 +144,7 @@ const DashboardView: React.FC = () => {
 
             </div>
 
-            {/* Daily Chart */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div className="bg-white p-6 shadow-sm border border-slate-100">
                 <h3 className="text-lg font-bold mb-6">Daily Consumption</h3>
                 <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
