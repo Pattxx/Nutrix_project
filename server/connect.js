@@ -22,6 +22,9 @@ const client = new MongoClient(uri, {
     },
 });
 
-let db = client.db("Nutrix_Data");
+await client.connect();
+console.log("MongoDB client connected");
+
+const db = client.db("Nutrix_Data");
 
 export default db;
