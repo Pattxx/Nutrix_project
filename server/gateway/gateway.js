@@ -4,7 +4,7 @@ import axios from "axios";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import foodRoutes from "./routes/food.js";
+//import foodRoutes from "./routes/food.js";
 
 
 const __filename = fileURLToPath(
